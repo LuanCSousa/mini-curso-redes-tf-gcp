@@ -1,0 +1,12 @@
+# ==============================================================================
+# Exemplo de Variáveis do Aluno (pre-material/foundation-check/terraform.tfvars.example)
+# ==============================================================================
+# INSTRUÇÕES:
+# 1. Copie este arquivo para 'terraform.tfvars':
+#    cp terraform.tfvars.example terraform.tfvars
+# 2. Preencha abaixo com os dados que você recebeu na lista da turma:
+
+project_id   = "SEU_PROJECT_ID_AQUI"
+student_id   = 1
+student_name = "Seu Nome Completo"
+region       = "us-central1"

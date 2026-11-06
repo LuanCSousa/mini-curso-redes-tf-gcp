@@ -1,0 +1,8 @@
+# ==============================================================================
+# Exemplo de Variáveis (labs/02-firewall-vms/terraform.tfvars.example)
+# ==============================================================================
+
+project_id = "SEU_PROJECT_ID_AQUI"
+student_id = 1
+region     = "us-central1"
+zone       = "us-central1-a"

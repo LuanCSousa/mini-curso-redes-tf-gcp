@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redes.tf — Central de Apresentações (Slides) | e-info FACAPE</title>
+  <link rel="stylesheet" href="./assets/slides.css" />
+  <style>
+    html, body {
+      overflow-y: auto;
+      user-select: text;
+    }
+    .launcher-wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 56px 28px 80px;
+    }
+    .deck-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 22px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .deck-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-strong);
+    }
+    .launch-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 22px;
+      border-radius: 10px;
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      color: #FFFFFF;
+      background: linear-gradient(135deg, #2563EB, #4F46E5);
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.3);
+    }
+    .launch-btn.tf {
+      background: linear-gradient(135deg, #7C3AED, #4F46E5);
+      box-shadow: 0 10px 24px rgba(124, 58, 237, 0.3);
+    }
+    .dl-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .dl-links a {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border-subtle);
+    }
+    .dl-links a:hover {
+      color: #FFFFFF;
+      border-color: var(--gcp-cyan);
+    }
+  </style>
+</head>
+<body>
+  <div class="launcher-wrap">
+    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 36px;">
+      <img src="./assets/logo-facape.svg" alt="Logo FACAPE" style="width: 74px; height: 74px;" />
+      <div>
+        <div class="slide-eyebrow" style="margin-bottom: 4px;">
+          <span class="pill">e-info • FACAPE</span>
+          <span class="pill pill-tf">8 Horas • Live Coding</span>
+        </div>
+        <h1 style="font-family: var(--font-display); font-size: 42px; font-weight: 700;">
+          Redes<span style="color: var(--tf-purple);">.tf</span> — Central de Slides
+        </h1>
+        <p style="font-size: 17px; color: var(--text-secondary);">
+          Facilitador: <strong>Luan Sousa</strong> (Cloud Engineer @ SantoDigital • Ciência da Computação FACAPE)
+        </p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="gap: 28px;">
+      <!-- Card Manhã -->
+      <div class="deck-card">
+        <div class="flex-col" style="gap: 14px;">
+          <div class="slide-eyebrow"><span class="pill">Deck 01 • Turno da Manhã (08h00–12h00)</span></div>
+          <h2 style="font-family: var(--font-display); font-size: 28px;">Fundamentos de Redes, VPC no GCP, Terraform e Firewall</h2>
+          <p style="font-size: 16px;">16 slides interativos cobrindo endereçamento IPv4/CIDR <code class="inline-code">/24</code>, os 4 IPs reservados do GCP, SDN Andromeda, ciclo de vida do Terraform e os guias de Live Coding das Etapas 00, 01 e 02 (Cloud IAP + VM Privada).</p>
+        </div>
+        <div class="flex-col" style="gap: 12px;">
+          <a href="./01-manha-teoria-base/index.html" class="launch-btn">▶ Abrir Apresentação da Manhã (16:9)</a>
+          <div class="dl-links">
+            <a href="./exportados/01-manha-redes-tf-gcp.pptx" download>⬇ Baixar PowerPoint (.pptx)</a>
+            <a href="./exportados/01-manha-redes-tf-gcp.pdf" download>⬇ Baixar PDF (.pdf)</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Tarde -->
+      <div class="deck-card">
+        <div class="flex-col" style="gap: 14px;">
+          <div class="slide-eyebrow"><span class="pill pill-tf">Deck 02 • Turno da Tarde (14h00–18h00)</span></div>
+          <h2 style="font-family: var(--font-display); font-size: 28px;">Roteamento, Cloud NAT, VPC Peering e Terraform Modules</h2>
+          <p style="font-size: 16px;">16 slides interativos cobrindo diagnóstico da tabela de rotas, SNAT com Cloud Router + Cloud NAT, arquitetura Hub-and-Spoke com VPC Peering, Desafio do Mural ao vivo e Boas Práticas com Módulos (<code class="inline-code">modules/</code>).</p>
+        </div>
+        <div class="flex-col" style="gap: 12px;">
+          <a href="./02-tarde-pratica-avancada/index.html" class="launch-btn tf">▶ Abrir Apresentação da Tarde (16:9)</a>
+          <div class="dl-links">
+            <a href="./exportados/02-tarde-redes-tf-gcp.pptx" download>⬇ Baixar PowerPoint (.pptx)</a>
+            <a href="./exportados/02-tarde-redes-tf-gcp.pdf" download>⬇ Baixar PDF (.pdf)</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 28px; padding: 20px 26px;">
+      <div style="font-family: var(--font-mono); font-size: 13px; color: var(--gcp-cyan); text-transform: uppercase;">Atalhos Rápidos durante a Projeção</div>
+      <div style="display: flex; gap: 28px; flex-wrap: wrap; margin-top: 8px; font-size: 15px; color: var(--text-secondary);">
+        <span><code class="inline-code">←</code> / <code class="inline-code">→</code> ou <code class="inline-code">Espaço</code> : Passar Slides</span>
+        <span><code class="inline-code">F</code> ou <code class="inline-code">F11</code> : Tela Cheia no Projetor</span>
+        <span><code class="inline-code">P</code> : Imprimir / Salvar PDF pelo Navegador</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

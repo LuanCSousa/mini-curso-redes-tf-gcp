@@ -1,0 +1,8 @@
+# ==============================================================================
+# Exemplo de Variáveis do Facilitador (hub-facilitador/terraform.tfvars.example)
+# ==============================================================================
+
+hub_project_id      = "einfo-redes-hub-central"
+region              = "us-central1"
+zone                = "us-central1-a"
+mural_cloud_run_url = ""

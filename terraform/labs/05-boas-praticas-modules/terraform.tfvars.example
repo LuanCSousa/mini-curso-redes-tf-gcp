@@ -1,0 +1,9 @@
+# ==============================================================================
+# Exemplo de Variáveis (labs/05-boas-praticas-modules/terraform.tfvars.example)
+# ==============================================================================
+
+project_id     = "SEU_PROJECT_ID_AQUI"
+student_id     = 1
+hub_project_id = "einfo-redes-hub-central"
+region         = "us-central1"
+zone           = "us-central1-a"

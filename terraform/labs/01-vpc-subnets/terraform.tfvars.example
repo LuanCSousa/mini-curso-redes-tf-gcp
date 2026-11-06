@@ -1,0 +1,10 @@
+# ==============================================================================
+# Exemplo de Variáveis (labs/01-vpc-subnets/terraform.tfvars.example)
+# ==============================================================================
+# Copie este arquivo para 'terraform.tfvars' e preencha com os seus dados:
+# cp terraform.tfvars.example terraform.tfvars
+
+project_id = "SEU_PROJECT_ID_AQUI"
+student_id = 1
+region     = "us-central1"
+zone       = "us-central1-a"

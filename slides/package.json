@@ -1,0 +1,14 @@
+{
+  "name": "redes-tf-gcp-slides",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Gerador de exportações PPTX e PDF dos slides do minicurso Redes.tf (e-info FACAPE)",
+  "scripts": {
+    "export": "node generate_exports.js"
+  },
+  "dependencies": {
+    "pdfkit": "^0.20.2",
+    "playwright": "^1.65.0",
+    "pptxgenjs": "^4.0.1"
+  }
+}

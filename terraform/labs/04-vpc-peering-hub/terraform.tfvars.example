@@ -1,0 +1,10 @@
+# ==============================================================================
+# Exemplo de Variáveis (labs/04-vpc-peering-hub/terraform.tfvars.example)
+# ==============================================================================
+
+project_id     = "SEU_PROJECT_ID_AQUI"
+student_id     = 1
+student_name   = "Seu Nome Completo"
+hub_project_id = "einfo-redes-hub-central"
+region         = "us-central1"
+zone           = "us-central1-a"

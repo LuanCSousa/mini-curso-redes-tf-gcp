@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redes.tf — Turno da Manhã (08h00–12h00) | e-info FACAPE</title>
+  <link rel="stylesheet" href="../assets/slides.css" />
+</head>
+<body>
+  <div class="deck-viewport">
+    <div class="deck-stage">
+      <div class="progress-track">
+        <div class="progress-bar" id="slide-progress"></div>
+      </div>
+
+      <!-- ==================================================================
+           SLIDE 01 — CAPA DO MINICURSO (TURNO DA MANHÃ)
+           ================================================================== -->
+      <section class="slide active">
+        <div class="grid-2" style="align-items: center;">
+          <div class="flex-col" style="gap: 20px;">
+            <div style="display: flex; align-items: center; gap: 16px;">
+              <img src="../assets/logo-facape.svg" alt="Logo FACAPE" style="width: 64px; height: 64px;" />
+              <div>
+                <div class="slide-eyebrow" style="margin-bottom: 4px;">
+                  <span class="pill">e-info • FACAPE</span>
+                  <span class="pill pill-tf">Turno da Manhã • 08h00–12h00</span>
+                </div>
+                <div style="font-size: 13.5px; color: var(--text-muted); font-family: var(--font-mono);">
+                  Faculdade de Ciências Aplicadas e Sociais de Petrolina
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h1 style="font-family: var(--font-display); font-size: 56px; font-weight: 700; line-height: 1.04; letter-spacing: -0.03em;">
+                Redes<span style="color: var(--tf-purple);">.tf</span>
+              </h1>
+              <h2 style="font-family: var(--font-display); font-size: 28px; font-weight: 600; color: #93C5FD; margin-top: 8px; line-height: 1.2;">
+                Da Teoria à Prática com Terraform e Google Cloud
+              </h2>
+              <p style="margin-top: 14px; font-size: 16.5px; color: var(--text-secondary); max-width: 640px;">
+                Um mergulho 100% prático nos fundamentos de <strong>VPC, Sub-redes, CIDR, Firewalls, Cloud NAT e VPC Peering</strong> construídos como código do zero ao fim.
+              </p>
+            </div>
+
+            <div class="card card-elevated" style="padding: 16px 20px; max-width: 620px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 14px;">
+                <div>
+                  <div style="font-size: 11.5px; font-family: var(--font-mono); color: var(--gcp-cyan); text-transform: uppercase;">Facilitador</div>
+                  <div style="font-size: 19px; font-weight: 700; color: var(--text-primary); margin-top: 2px;">Luan Sousa</div>
+                  <div style="font-size: 13.5px; color: var(--text-secondary);">Cloud Engineer @ SantoDigital • Google Cloud Digital Leader • CC FACAPE</div>
+                </div>
+                <span class="icon-badge tf" style="width: 44px; height: 44px; font-size: 16px;">.tf</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ilustração SVG de Topologia Cloud + IaC (Caixas alargadas sem overflow) -->
+          <div class="card" style="height: 100%; justify-content: center; align-items: center; background: radial-gradient(circle at center, rgba(35,62,150,0.28), rgba(11,17,32,0.95));">
+            <svg viewBox="0 0 620 520" width="100%" height="100%">
+              <defs>
+                <linearGradient id="gradHub" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#1E3A8A" />
+                  <stop offset="100%" stop-color="#0F172A" />
+                </linearGradient>
+                <linearGradient id="gradTf" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#6D28D9" />
+                  <stop offset="100%" stop-color="#1E1B4B" />
+                </linearGradient>
+              </defs>
+              <!-- Bloco Terraform IaC -->
+              <rect x="165" y="20" width="290" height="82" rx="14" fill="url(#gradTf)" stroke="#8B5CF6" stroke-width="2" />
+              <text x="310" y="54" text-anchor="middle" fill="#F8FAFC" font-family="Space Grotesk" font-size="19" font-weight="700">Terraform (HCL &gt;= 1.5)</text>
+              <text x="310" y="80" text-anchor="middle" fill="#C4B5FD" font-family="JetBrains Mono" font-size="12.5">init → plan → apply → state</text>
+
+              <!-- Linhas animadas descendo do Terraform para o GCP -->
+              <line x1="250" y1="102" x2="160" y2="185" stroke="#8B5CF6" stroke-width="2.5" class="animated-flow" />
+              <line x1="370" y1="102" x2="460" y2="185" stroke="#8B5CF6" stroke-width="2.5" class="animated-flow" />
+
+              <!-- VPC Aluno -->
+              <rect x="20" y="185" width="260" height="190" rx="14" fill="url(#gradHub)" stroke="#3B82F6" stroke-width="2" />
+              <text x="150" y="216" text-anchor="middle" fill="#93C5FD" font-family="JetBrains Mono" font-size="12" font-weight="700">VPC DO ALUNO (SPOKE)</text>
+              <text x="150" y="242" text-anchor="middle" fill="#F8FAFC" font-family="Space Grotesk" font-size="17" font-weight="700">10.&lt;ID&gt;.0.0/24</text>
+              <rect x="42" y="260" width="216" height="42" rx="8" fill="#090D16" stroke="#10B981" stroke-width="1.5" />
+              <text x="150" y="286" text-anchor="middle" fill="#6EE7B7" font-family="JetBrains Mono" font-size="12">VM Privada + Cloud IAP</text>
+              <rect x="42" y="314" width="216" height="40" rx="8" fill="#090D16" stroke="#38BDF8" stroke-width="1.5" />
+              <text x="150" y="339" text-anchor="middle" fill="#7DD3FC" font-family="JetBrains Mono" font-size="12">Firewall + Cloud NAT</text>
+
+              <!-- VPC Hub Central -->
+              <rect x="340" y="185" width="260" height="190" rx="14" fill="url(#gradHub)" stroke="#10B981" stroke-width="2" />
+              <text x="470" y="216" text-anchor="middle" fill="#6EE7B7" font-family="JetBrains Mono" font-size="12" font-weight="700">PROJETO CENTRAL (HUB)</text>
+              <text x="470" y="242" text-anchor="middle" fill="#F8FAFC" font-family="Space Grotesk" font-size="15" font-weight="700">10.0.1.0/24 • 10.0.2.0/24</text>
+              <rect x="362" y="260" width="216" height="42" rx="8" fill="#090D16" stroke="#F59E0B" stroke-width="1.5" />
+              <text x="470" y="286" text-anchor="middle" fill="#FCD34D" font-family="JetBrains Mono" font-size="12">Coletor: 10.0.1.10</text>
+              <rect x="362" y="314" width="216" height="40" rx="8" fill="#090D16" stroke="#8B5CF6" stroke-width="1.5" />
+              <text x="470" y="339" text-anchor="middle" fill="#C4B5FD" font-family="JetBrains Mono" font-size="12">Mural Ao Vivo (Cloud Run)</text>
+
+              <!-- Conexão Peering -->
+              <line x1="280" y1="280" x2="340" y2="280" stroke="#10B981" stroke-width="4" class="animated-flow" />
+
+              <!-- Rodapé do Diagrama: Módulos (Largura 560px para caber todo o texto com folga) -->
+              <rect x="30" y="410" width="560" height="76" rx="12" fill="#131C31" stroke="#60A5FA" stroke-width="1.5" />
+              <text x="310" y="440" text-anchor="middle" fill="#F8FAFC" font-family="Space Grotesk" font-size="15" font-weight="700">Evolução Completa: Recursos Nativos → Módulos Terraform</text>
+              <text x="310" y="466" text-anchor="middle" fill="#94A3B8" font-family="JetBrains Mono" font-size="12">modules/vpc-network • modules/firewall-rules • modules/vpc-peering</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           SLIDE 02 — SOBRE O FACILITADOR & FILOSOFIA DO CURSO
+           ================================================================== -->
+      <section class="slide">
+        <div class="slide-header">
+          <div>
+            <div class="slide-eyebrow"><span class="pill">Boas-vindas</span> Abertura e Metodologia</div>
+            <h2 class="slide-title">Quem vai guiar essa jornada e como vamos trabalhar</h2>
+          </div>
+          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card card-elevated" style="justify-content: space-between;">
+            <div class="flex-col">
+              <div class="card-title"><span class="icon-badge">LS</span> Luan Sousa</div>
+              <p><strong>Cloud Engineer na SantoDigital</strong> (Parceira Premier Google Cloud), atuando no desenho, implantação e sustentação de arquiteturas em nuvem.</p>
+              <ul class="feature-list" style="margin-top: 4px;">
+                <li><strong>Visão 360°:</strong> Experiência prática passando por projetos de <strong>Fullstack, DevOps, Infraestrutura e SecOps</strong>.</li>
+                <li><strong>Certificação:</strong> Google Cloud Digital Leader.</li>
+                <li><strong>Da Casa:</strong> Bacharelando em <strong>Ciência da Computação pela FACAPE</strong>.</li>
+              </ul>
+            </div>
+            <div style="padding: 12px 16px; border-radius: 10px; background: rgba(35, 62, 150, 0.35); border: 1px solid rgba(96, 165, 250, 0.3); font-size: 14.5px; color: #DBEAFE;">
+              "Na faculdade vemos CIDR, roteamento, NAT e firewall na teoria. Hoje você vai ver exatamente onde cada um desses conceitos vive dentro do Google Cloud!"
+            </div>
+          </div>
+
+          <div class="flex-col" style="justify-content: space-between;">
+            <div class="card card-live" style="flex: 1;">
+              <div class="card-title"><span class="icon-badge green">01</span> Regra de Ouro: Zero ClickOps</div>
+              <p>Hoje nós <strong>não vamos criar nada clicando em formulários</strong> do Console GCP. O painel web servirá apenas para <strong>inspecionar e comprovar visualmente</strong> o que o nosso código Terraform construiu.</p>
+            </div>
+
+            <div class="card card-tf" style="flex: 1;">
+              <div class="card-title"><span class="icon-badge tf">02</span> Construção do Zero ao Fim (Live Coding)</div>
+              <p>Vamos digitar cada bloco juntos em <code class="inline-code">terraform/live-coding/</code>. E se alguém atrasar? Todas as etapas já estão prontas em <code class="inline-code">terraform/labs/</code> como <strong>checkpoint de segurança</strong>!</p>
+            </div>
+
+            <div class="card" style="flex: 1;">
+              <div class="card-title"><span class="icon-badge amber">03</span> Do Básico às Boas Práticas de Engenharia</div>
+              <p>Começamos com recursos explícitos para entender cada detalhe de rede sem "caixa-preta" e fechamos o dia com <strong>Módulos Reutilizáveis do Terraform</strong>.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           SLIDE 03 — MAPA DA JORNADA DE 8 HORAS
+           ================================================================== -->
+      <section class="slide">
+        <div class="slide-header">
+          <div>
+            <div class="slide-eyebrow"><span class="pill">Cronograma 8h</span> Visão Geral do Dia</div>
+            <h2 class="slide-title">Nossa Trilha de Construção: Manhã vs. Tarde</h2>
+          </div>
+          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card card-elevated">
+            <div class="slide-eyebrow"><span class="pill">Turno 01 • 08h00 às 12h00</span></div>
+            <div class="card-title" style="font-size: 22px;">Manhã: Fundação, VPC, Firewall e VMs</div>
+            <div class="flex-col" style="margin-top: 6px; gap: 10px;">
+              <div class="step-item">
+                <span class="step-num">M1</span>
+                <div><strong>08h00–09h00 • Redes na Nuvem:</strong> IPv4, máscara CIDR <code class="inline-code">/24</code>, IPs reservados e SDN Andromeda no GCP.</div>
+              </div>
+              <div class="step-item">
+                <span class="step-num">M2</span>
+                <div><strong>09h00–09h50 • Terraform do Zero:</strong> Providers, State e setup inicial (<code class="inline-code">versions.tf</code>, <code class="inline-code">variables.tf</code>).</div>
+              </div>
+              <div class="step-item">
+                <span class="step-num">M3</span>
+                <div><strong>10h10–11h00 • Lab 01 (VPC &amp; Sub-redes):</strong> Criando a VPC Custom e a sub-rede <code class="inline-code">10.&lt;ID&gt;.0.0/24</code>.</div>
+              </div>
+              <div class="step-item">
+                <span class="step-num">M4</span>
+                <div><strong>11h00–12h00 • Lab 02 (Firewall, IAP &amp; VM):</strong> Subindo VM 100% privada, túnel SSH via IAP e o mistério do <code class="inline-code">ping 8.8.8.8</code>!</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card-tf">
+            <div class="slide-eyebrow"><span class="pill pill-tf">Turno 02 • 14h00 às 18h00</span></div>
+            <div class="card-title" style="font-size: 22px;">Tarde: NAT, VPC Peering e Módulos</div>
+            <div class="flex-col" style="margin-top: 6px; gap: 10px;">
+              <div class="step-item">
+                <span class="step-num">M5</span>
+                <div><strong>14h00–15h00 • Lab 03 (Roteamento &amp; Cloud NAT):</strong> Tabelas de rotas, SNAT e saída segura para internet.</div>
+              </div>
+              <div class="step-item">
+                <span class="step-num">M6</span>
+                <div><strong>15h00–16h05 • Lab 04 (VPC Peering + Mural):</strong> Conectando a rede do aluno ao Hub Central e check-in ao vivo no telão!</div>
+              </div>
+              <div class="step-item">
+                <span class="step-num">M7</span>
+                <div><strong>16h25–17h30 • Lab 05 (Boas Práticas — Modules):</strong> Como organizar tudo em módulos reutilizáveis de produção.</div>
+              </div>
+              <div class="step-item">
+                <span class="step-num">M8</span>
+                <div><strong>17h30–18h00 • FinOps &amp; Encerramento:</strong> Grafo reverso com <code class="inline-code">terraform destroy</code> e carreira Cloud.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           SLIDE 04 — CHECK-IN DO PRÉ-MATERIAL E IDENTIDADE DO ALUNO
+           ================================================================== -->
+      <section class="slide">
+        <div class="slide-header">
+          <div>
+            <div class="slide-eyebrow"><span class="pill pill-live">Alinhamento Inicial</span> Seu Passaporte de Rede</div>
+            <h2 class="slide-title">Check-in do Ambiente: Seu <code class="inline-code">student_id</code> e <code class="inline-code">project_id</code></h2>
+          </div>
+          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+        </div>
+
+        <div class="grid-2-wide-left">
+          <div class="flex-col">
+            <div class="card" style="flex: 1;">
+              <div class="card-title"><span class="icon-badge">ID</span> Por que cada aluno tem um <code class="inline-code">student_id</code> único (1 a 40)?</div>
+              <p>No turno da tarde, todas as redes da sala farão <strong>VPC Network Peering</strong> com o Projeto Central. Em redes, <strong>duas redes conectadas nunca podem ter o mesmo bloco de IPs (CIDR Overlap)</strong>!</p>
+              <table class="tech-table" style="margin-top: 4px;">
+                <thead>
+                  <tr>
+                    <th>Participante</th>
+                    <th>Sufixo</th>
+                    <th>Sub-rede Exclusiva</th>
+                    <th>Hub de Destino</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Aluno 01</strong></td>
+                    <td><code class="inline-code">aluno-01</code></td>
+                    <td><code class="inline-code">10.1.0.0/24</code></td>
+                    <td><code class="inline-code">vpc-hub-turma-a</code> (<code class="inline-code">10.0.1.0/24</code>)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Aluno 07</strong></td>
+                    <td><code class="inline-code">aluno-07</code></td>
+                    <td><code class="inline-code">10.7.0.0/24</code></td>
+                    <td><code class="inline-code">vpc-hub-turma-a</code> (<code class="inline-code">10.0.1.0/24</code>)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Aluno 25</strong></td>
+                    <td><code class="inline-code">aluno-25</code></td>
+                    <td><code class="inline-code">10.25.0.0/24</code></td>
+                    <td><code class="inline-code">vpc-hub-turma-b</code> (<code class="inline-code">10.0.2.0/24</code>)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="card card-warn" style="padding: 14px 18px; flex-shrink: 0;">
+              <div style="font-size: 14.5px; color: #FDE68A; line-height: 1.4;">
+                <strong>Isolamento em Projetos de Grupo:</strong> Até 4 alunos compartilham um projeto GCP (<code class="inline-code">einfo-redes-grupo-XX</code>). Como seu Terraform usa sempre o sufixo <code class="inline-code">aluno-XX</code> e seu próprio <code class="inline-code">terraform.tfstate</code>, um aluno jamais altera a rede do colega!
+              </div>
+            </div>
+          </div>
+
+          <div class="code-window">
+            <div class="code-topbar">
+              <div class="window-dots"><span></span><span></span><span></span></div>
+              <span>Terminal — Verificação Rápida</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><span class="hl-com"># 1. Verifique se o Terraform está instalado</span>
+<span class="hl-cmd">terraform</span> -version
+
+<span class="hl-com"># 2. Confira seu projeto ativo no gcloud</span>
+<span class="hl-cmd">gcloud</span> config get-value project
+
+<span class="hl-com"># 3. Autentique o ADC (usado pelo Terraform!)</span>
+<span class="hl-cmd">gcloud</span> auth application-default login
+
+<span class="hl-com"># 4. Entre na pasta onde vamos codar do zero</span>
+<span class="hl-cmd">cd</span> terraform/live-coding</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           SLIDE 05 — DA REDE FÍSICA À SDN ANDROMEDA DO GOOGLE CLOUD
+           ================================================================== -->
+      <section class="slide">
+        <div class="slide-header">
+          <div>
+            <div class="slide-eyebrow"><span class="pill">Módulo 01 • Teoria Aplicada</span> Redes Físicas vs. Nuvem</div>
+            <h2 class="slide-title">Onde foram parar os cabos, switches e roteadores na Nuvem?</h2>
+          </div>
+          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title"><span class="icon-badge amber">LAN</span> Rede Tradicional (On-Premises)</div>
+            <ul class="feature-list">
+              <li><strong>Hardware Dedicado:</strong> Switches L2, roteadores L3, appliances físicos de Firewall e cabeamento estruturado.</li>
+              <li><strong>Mudança Lenta e Manual:</strong> Criar uma nova VLAN ou alterar uma rota exige acesso via cabo console/SSH em cada equipamento.</li>
+              <li><strong>Ponto Único de Gargalo:</strong> Todo o tráfego de saída ou firewall passa por uma "caixa física" central que pode saturar.</li>
+              <li><strong>Escopo Local:</strong> Uma LAN fica presa a um prédio ou datacenter; conectar dois estados exige contratar links MPLS/VPN caros.</li>
+            </ul>
+          </div>
+
+          <div class="card card-elevated">
+            <div class="card-title"><span class="icon-badge green">SDN</span> Google Cloud Andromeda (SDN)</div>
+            <ul class="feature-list">
+              <li><strong>Rede Definida por Software:</strong> Tabelas de roteamento, sub-redes, NAT e Firewalls são <strong>regras de software declaradas via API</strong>.</li>
+              <li><strong>Virtualização no Hipervisor:</strong> O firewall e o roteamento acontecem direto na placa de rede virtual (vNIC) de cada máquina host, sem "caixa central" de gargalo!</li>
+              <li><strong>Backbone Privado Global:</strong> Os datacenters da Google são interligados por cabos submarinos e terrestres próprios.</li>
+              <li><strong>Provisionamento em Segundos:</strong> Com 15 linhas de Terraform, criamos uma rede global pronta para produção.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           SLIDE 06 — ANATOMIA DO ENDEREÇAMENTO IPV4 E MÁSCARA CIDR /24
+           ================================================================== -->
+      <section class="slide">
+        <div class="slide-header">
+          <div>
+            <div class="slide-eyebrow"><span class="pill">Módulo 01 • Fundamentos IPv4</span> Desmistificando o CIDR</div>
+            <h2 class="slide-title">Entendendo o Bloco <code class="inline-code">10.&lt;student_id&gt;.0.0/24</code> na Prática</h2>
+          </div>
+          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+        </div>
+
+        <div class="flex-col" style="flex: 1; justify-content: flex-start; gap: 16px;">
+          <p>Um endereço <strong>IPv4 possui 32 bits</strong> divididos em <strong>4 octetos de 8 bits</strong> (cada número vai de <code class="inline-code">0</code> a <code class="inline-code">255</code>). A barra <code class="inline-code">/24</code> diz quantos bits da esquerda para a direita estão <strong>travados para identificar a Rede</strong>:</p>
+
+          <div class="cidr-visualizer">
+            <div class="octet-box">
+              <div class="octet-val">10</div>
+              <div class="octet-bits">00001010 (8 bits)</div>
+              <span class="octet-role">1º Octeto • Rede Privada (RFC 1918)</span>
+            </div>
+            <div class="octet-box">
+              <div class="octet-val">&lt;ID&gt;</div>
+              <div class="octet-bits">Aluno 01 a 40 (+8 = 16 bits)</div>
+              <span class="octet-role">2º Octeto • ID do Aluno</span>
+            </div>
+            <div class="octet-box">
+              <div class="octet-val">0</div>
+              <div class="octet-bits">00000000 (+8 = 24 bits)</div>
+              <span class="octet-role">3º Octeto • Sub-rede Principal</span>
+            </div>
+            <div class="octet-box host-octet">
+              <div class="octet-val">0..255</div>
+              <div class="octet-bits">XXXXXXXX (8 bits livres!)</div>
+              <span class="octet-role">4º Octeto • Hosts (2⁸ = 256 IPs)</span>
+            </div>
+          </div>
+
+          <div class="grid-3" style="flex: 1;">
+            <div class="card">
+              <div style="font-family: var(--font-mono); font-size: 13px; color: var(--gcp-cyan); font-weight: 700;">Analogia do CEP</div>
+              <p>Os 24 bits iniciais (<code class="inline-code">10.7.0</code>) são o <strong>nome da rua</strong>. Os 8 bits finais (<code class="inline-code">.1</code> a <code class="inline-code">.254</code>) são o <strong>número de cada casa (VM)</strong> naquela rua.</p>
+            </div>
+            <div class="card">
+              <div style="font-family: var(--font-mono); font-size: 13px; color: #C4B5FD; font-weight: 700;">E se fosse /16?</div>
+              <p>Em um <code class="inline-code">/16</code>, apenas os 2 primeiros octetos seriam fixos e sobrariam 16 bits para máquinas (<strong>2¹⁶ = 65.536 IPs</strong>).</p>
+            </div>
+            <div class="card">
+              <div style="font-family: var(--font-mono); font-size: 13px; color: #6EE7B7; font-weight: 700;">E o /32 no Firewall?</div>
+              <p>Um <code class="inline-code">/32</code> trava todos os 32 bits (<code class="inline-code">2⁰ = 1 IP</code>). Usamos <code class="inline-code">/32</code> quando queremos apontar para <strong>1 único IP exato</strong>!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           SLIDE 07 — OS 4 IPS RESERVADOS EM TODA SUB-REDE DO GCP
+           ================================================================== -->
+      <section class="slide">
+        <div class="slide-header">
+          <div>
+            <div class="slide-eyebrow"><span class="pill">Módulo 01 • Pegadinha Clássica de Cloud</span> 256 − 4 = 252 Hosts</div>
+            <h2 class="slide-title">Por que nossa primeira VM no GCP recebe o IP <code class="inline-code">.2</code> e não o <code class="inline-code">.1</code>?</h2>
+          </div>
+          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+        </div>
+
+        <div class="grid-2-wide-left" style="align-items: stretch;">
+          <div class="card">
+            <div class="card-title">Os 4 Endereços Reservados pelo Google Cloud em toda Sub-rede</div>
+            <table class="tech-table" style="margin-top: 4px;">
+              <thead>
+                <tr>
+                  <th>Endereço (Ex: Aluno 07)</th>
+                  <th>Quem usa?</th>
+                  <th>Explicação Técnica</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code class="inline-code">10.7.0.0</code></td>
+                  <td><strong>Endereço da Rede</strong></td>
+                  <td>Identifica a própria sub-rede nas tabelas de roteamento.</td>
+                </tr>
+                <tr>
+                  <td><code class="inline-code">10.7.0.1</code></td>
+                  <td><strong>Default Gateway Virtual</strong></td>
+                  <td>Roteador virtual da SDN Andromeda para onde a VM envia pacotes de saída.</td>
+                </tr>
+                <tr>
+                  <td><code class="inline-code">10.7.0.2</code> até <code class="inline-code">.253</code></td>
+                  <td><strong style="color: #34D399;">IPs Livres (252 hosts)</strong></td>
+                  <td>Faixa atribuída às VMs! Por isso sua 1ª VM sempre nasce com final <code class="inline-code">.2</code>!</td>
+                </tr>
+                <tr>
+                  <td><code class="inline-code">10.7.0.254</code></td>
+                  <td><strong>Penúltimo IP (Reservado)</strong></td>
+                  <td>Reservado internamente pela Google para serviços da SDN.</td>
+                </tr>
+                <tr>
+                  <td><code class="inline-code">10.7.0.255</code></td>
+                  <td><strong>Endereço de Broadcast</strong></td>
+                  <td>Último endereço do bloco <code class="inline-code">/24</code> segundo o padrão RFC.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card card-elevated" style="justify-content: center; text-align: center; padding: 28px 24px;">
+            <div style="font-family: var(--font-mono); font-size: 13px; color: var(--gcp-cyan); text-transform: uppercase;">Fórmula de Sub-rede no GCP</div>
+            <div style="font-family: var(--font-display); font-size: 52px; font-weight: 700; color: #34D399; margin: 10px 0;">
+              2<sup style="font-size: 26px;">(32 − CIDR)</sup> − 4
+            </div>
+            <p style="font-size: 15.5px;">Para uma máscara <code class="inline-code">/24</code>:<br/><strong>2⁸ − 4 = 256 − 4 = 252 IPs utilizáveis</strong>.</p>
+            <div style="margin-top: 14px; padding: 12px; border-radius: 10px; background: rgba(15, 23, 42, 0.8); font-family: var(--font-mono); font-size: 12.5px; color: #93C5FD;">
+              No Lab 01 vamos exibir o <code class="inline-code">gateway_address</code> no output do Terraform e comprovar que ele é o <code class="inline-code">10.&lt;ID&gt;.0.1</code>!
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           SLIDE 08 — HIERARQUIA NO GCP: VPC GLOBAL vs. SUBNET REGIONAL
+           ================================================================== -->
+      <section class="slide">
+        <div class="slide-header">
+          <div>
+            <div class="slide-eyebrow"><span class="pill">Módulo 01 • Arquitetura GCP</span> O Grande Diferencial do Google Cloud</div>
+            <h2 class="slide-title">Escopo de Recursos: VPC é Global, Sub-rede é Regional, VM é Zonal</h2>
+          </div>
+          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+        </div>
+
+        <div class="grid-2" style="align-items: stretch;">
+          <div class="flex-col" style="justify-content: space-between;">
+            <div class="card card-elevated" style="flex: 1;">
+              <div class="card-title"><span class="icon-badge">1</span> VPC Network = Recurso GLOBAL</div>
+              <p>Uma única VPC no GCP atravessa o planeta inteiro. Ela não tem "região" nem faixa de IP própria: ela é o <strong>contêiner global de roteamento e firewall</strong>.</p>
+            </div>
+            <div class="card" style="flex: 1;">
+              <div class="card-title"><span class="icon-badge green">2</span> Subnetwork (Sub-rede) = Recurso REGIONAL</div>
+              <p>Cada sub-rede vive em uma região geográfica (ex: <code class="inline-code">us-central1</code> em Iowa ou <code class="inline-code">southamerica-east1</code> em São Paulo) e possui o bloco CIDR (<code class="inline-code">10.7.0.0/24</code>).</p>
+            </div>
+            <div class="card" style="flex: 1;">
+              <div class="card-title"><span class="icon-badge tf">3</span> Máquina Virtual (VM) = Recurso ZONAL</div>
+              <p>A VM nasce em um datacenter específico dentro da região (ex: zona <code class="inline-code">us-central1-a</code>), mas consome um IP da sub-rede regional!</p>
+            </div>
+          </div>
+
+          <div class="card" style="height: 100%; justify-content: center; align-items: center;">
+            <svg viewBox="0 0 580 430" width="100%" height="100%">
+              <!-- VPC Global Box -->
+              <rect x="16" y="16" width="548" height="398" rx="16" fill="#0D1528" stroke="#3B82F6" stroke-width="2.5" stroke-dasharray="8 4" />
+              <text x="38" y="48" fill="#60A5FA" font-family="Space Grotesk" font-size="17" font-weight="700">VPC GLOBAL: vpc-redes-tf-aluno-07</text>
+
+              <!-- Região 1: us-central1 -->
+              <rect x="36" y="72" width="240" height="318" rx="12" fill="#131C31" stroke="#10B981" stroke-width="2" />
+              <text x="156" y="102" text-anchor="middle" fill="#6EE7B7" font-family="JetBrains Mono" font-size="12" font-weight="700">REGIÃO: us-central1</text>
+              <text x="156" y="124" text-anchor="middle" fill="#F8FAFC" font-family="JetBrains Mono" font-size="13">Subnet: 10.7.0.0/24</text>
+
+              <rect x="56" y="145" width="200" height="98" rx="8" fill="#080D1A" stroke="#8B5CF6" stroke-width="1.5" />
+              <text x="156" y="172" text-anchor="middle" fill="#C4B5FD" font-family="JetBrains Mono" font-size="11.5">Zona: us-central1-a</text>
+              <text x="156" y="200" text-anchor="middle" fill="#F8FAFC" font-family="Space Grotesk" font-size="15" font-weight="700">VM: 10.7.0.2</text>
+              <text x="156" y="224" text-anchor="middle" fill="#94A3B8" font-family="JetBrains Mono" font-size="11">(Nossa VM do Lab 02)</text>
+
+              <rect x="56" y="262" width="200" height="98" rx="8" fill="#080D1A" stroke="#475569" stroke-width="1.5" />
+              <text x="156" y="289" text-anchor="middle" fill="#94A3B8" font-family="JetBrains Mono" font-size="11.5">Zona: us-central1-b</text>
+              <text x="156" y="317" text-anchor="middle" fill="#CBD5E1" font-family="Space Grotesk" font-size="14">VM: 10.7.0.3</text>
+              <text x="156" y="341" text-anchor="middle" fill="#64748B" font-family="JetBrains Mono" font-size="11">(Mesma sub-rede /24!)</text>
+
+              <!-- Região 2: southamerica-east1 -->
+              <rect x="304" y="72" width="240" height="318" rx="12" fill="#131C31" stroke="#38BDF8" stroke-width="1.5" stroke-opacity="0.6" />
+              <text x="424" y="102" text-anchor="middle" fill="#7DD3FC" font-family="JetBrains Mono" font-size="11.5" font-weight="700">REGIÃO: southamerica-east1</text>
+              <text x="424" y="124" text-anchor="middle" fill="#F8FAFC" font-family="JetBrains Mono" font-size="13">Subnet: 10.107.0.0/24</text>
+              <rect x="324" y="145" width="200" height="98" rx="8" fill="#080D1A" stroke="#475569" stroke-width="1.5" />
+              <text x="424" y="172" text-anchor="middle" fill="#94A3B8" font-family="JetBrains Mono" font-size="11.5">Zona: sa-east1-a (SP)</text>
+              <text x="424" y="200" text-anchor="middle" fill="#CBD5E1" font-family="Space Grotesk" font-size="15">VM: 10.107.0.2</text>
+
+              <!-- Fibra interna entre regiões -->
+              <line x1="256" y1="194" x2="324" y2="194" stroke="#10B981" stroke-width="3" class="animated-flow" />
+              <text x="424" y="295" text-anchor="middle" fill="#6EE7B7" font-family="Plus Jakarta Sans" font-size="12.5">Comunicação privada direta</text>
+              <text x="424" y="315" text-anchor="middle" fill="#6EE7B7" font-family="Plus Jakarta Sans" font-size="12.5">pela fibra global da Google</text>
+              <text x="424" y="335" text-anchor="middle" fill="#6EE7B7" font-family="Plus Jakarta Sans" font-size="12.5">sem precisar de VPN!</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           SLIDE 09 — POR QUE INFRAESTRUTURA COMO CÓDIGO (TERRAFORM)?
+           ================================================================== -->
+      <section class="slide">
+        <div class="slide-header">
+          <div>
+            <div class="slide-eyebrow"><span class="pill pill-tf">Módulo 02 • Infraestrutura como Código</span> O Fim do ClickOps</div>
+            <h2 class="slide-title">Por que gerenciar Redes com Terraform em vez do Console Web?</h2>
+          </div>
+          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+        </div>
+
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-title"><span class="icon-badge amber">01</span> O Problema do ClickOps</div>
+            <ul class="feature-list">
+              <li>Passos manuais esquecidos ao recriar redes em <code class="inline-code">dev</code>, <code class="inline-code">staging</code> e <code class="inline-code">prod</code>.</li>
+              <li>Regras de firewall temporárias ("só para testar") que ficam abertas para sempre sem documentação.</li>
+              <li>Impossível fazer <strong>Code Review (Pull Request)</strong> de cliques no navegador.</li>
+            </ul>
+          </div>
+
+          <div class="card card-tf">
+            <div class="card-title"><span class="icon-badge tf">02</span> O Poder Declarativo (HCL)</div>
+            <ul class="feature-list">
+              <li>Você declara <strong>"o estado final que deseja"</strong> (ex: quero 1 VPC e 2 regras de firewall), e não o passo a passo imperativo.</li>
+              <li>O Terraform descobre sozinho a <strong>ordem de criação (Grafo de Dependências)</strong>: primeiro a VPC, depois a Sub-rede, depois a VM!</li>
+            </ul>
+          </div>
+
+          <div class="card card-elevated">
+            <div class="card-title"><span class="icon-badge green">03</span> O Arquivo de Estado (<code class="inline-code">.tfstate</code>)</div>
+            <ul class="feature-list">
+              <li>O <code class="inline-code">terraform.tfstate</code> é a <strong>memória do Terraform</strong>: ele mapeia cada bloco do seu código <code class="inline-code">.tf</code> para o ID real do recurso criado lá no Google Cloud.</li>
+              <li>No <code class="inline-code">terraform plan</code>, ele compara seu código com o <code class="inline-code">.tfstate</code> e mostra exatamente o que mudará!</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           SLIDE 10 — ANATOMIA DO HCL E CICLO DE VIDA DO TERRAFORM
+           ================================================================== -->
+      <section class="slide">
+        <div class="slide-header">
+          <div>
+            <div class="slide-eyebrow"><span class="pill pill-tf">Módulo 02 • Sintaxe HCL</span> Os 5 Blocos e os 5 Comandos</div>
+            <h2 class="slide-title">Anatomia do Terraform que vamos codar hoje</h2>
+          </div>
+          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="code-window">
+            <div class="code-topbar">
+              <div class="window-dots"><span></span><span></span><span></span></div>
+              <span>Sintaxe de um Recurso em HCL</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><span class="hl-com"># Bloco: resource "&lt;TIPO_DO_RECURSO&gt;" "&lt;NOME_LOCAL&gt;"</span>
+<span class="hl-kw">resource</span> <span class="hl-type">"google_compute_network"</span> <span class="hl-str">"vpc_aluno"</span> {
+  <span class="hl-attr">name</span>                    = <span class="hl-str">"vpc-redes-tf-aluno-07"</span>
+  <span class="hl-attr">auto_create_subnetworks</span> = <span class="hl-num">false</span>
+}
+
+<span class="hl-com"># Referenciando outro recurso (Grafo de Dependência!):</span>
+<span class="hl-kw">resource</span> <span class="hl-type">"google_compute_subnetwork"</span> <span class="hl-str">"subnet"</span> {
+  <span class="hl-attr">name</span>          = <span class="hl-str">"subnet-us-central1-aluno-07"</span>
+  <span class="hl-attr">ip_cidr_range</span> = <span class="hl-str">"10.7.0.0/24"</span>
+  <span class="hl-attr">network</span>       = google_compute_network.vpc_aluno.id
+}</pre>
+          </div>
+
+          <div class="flex-col" style="justify-content: space-between;">
+            <div class="step-item">
+              <span class="step-num">1</span>
+              <div><code class="inline-code">terraform init</code> — Inicializa o diretório e baixa o plugin do provider <code class="inline-code">hashicorp/google</code>.</div>
+            </div>
+            <div class="step-item">
+              <span class="step-num">2</span>
+              <div><code class="inline-code">terraform fmt &amp;&amp; terraform validate</code> — Formata o código automaticamente e valida se a sintaxe e tipos estão corretos.</div>
+            </div>
+            <div class="step-item">
+              <span class="step-num">3</span>
+              <div><code class="inline-code">terraform plan</code> — Simula a execução e exibe o que será criado (<code class="inline-code">+</code>), alterado (<code class="inline-code">~</code>) ou removido (<code class="inline-code">-</code>).</div>
+            </div>
+            <div class="step-item">
+              <span class="step-num">4</span>
+              <div><code class="inline-code">terraform apply</code> — Chama a API do Google Cloud, constrói a infraestrutura real e atualiza o <code class="inline-code">terraform.tfstate</code>.</div>
+            </div>
+            <div class="step-item">
+              <span class="step-num">5</span>
+              <div><code class="inline-code">terraform destroy</code> — Remove todos os recursos na ordem inversa de dependência no final do dia.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           SLIDE 11 — LIVE CODING PARTE 00: SETUP INICIAL (09h20–09h50)
+           ================================================================== -->
+      <section class="slide">
+        <div class="slide-header">
+          <div>
+            <div class="slide-eyebrow"><span class="pill pill-live">Mão na Massa • Live Coding 00</span> 09h20 – 09h50</div>
+            <h2 class="slide-title">Preparando nossa Fundação em <code class="inline-code">terraform/live-coding/</code></h2>
+          </div>
+          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+        </div>
+
+        <div class="grid-2-wide-right">
+          <div class="flex-col" style="justify-content: space-between;">
+            <div class="card card-live" style="flex: 1;">
+              <div class="card-title"><span class="icon-badge green">▶</span> Roteiro de Construção</div>
+              <div class="flex-col" style="gap: 8px; margin-top: 4px;">
+                <div class="step-item"><span class="step-num">1</span><div>Criar <code class="inline-code">versions.tf</code> definindo Terraform <code class="inline-code">&gt;= 1.5.0</code> e provider <code class="inline-code">hashicorp/google ~&gt; 5.0</code>.</div></div>
+                <div class="step-item"><span class="step-num">2</span><div>Criar <code class="inline-code">providers.tf</code> conectando ao <code class="inline-code">var.project_id</code> e <code class="inline-code">var.region</code>.</div></div>
+                <div class="step-item"><span class="step-num">3</span><div>Criar <code class="inline-code">variables.tf</code> com validação de <code class="inline-code">student_id</code> entre <code class="inline-code">1</code> e <code class="inline-code">40</code>.</div></div>
+                <div class="step-item"><span class="step-num">4</span><div>Criar <code class="inline-code">terraform.tfvars</code> com seu ID e rodar <code class="inline-code">terraform init</code>!</div></div>
+              </div>
+            </div>
+            <div class="card" style="padding: 14px 18px; flex-shrink: 0;">
+              <div style="font-size: 13px; font-family: var(--font-mono); color: var(--gcp-amber);">☕ Meta antes do Coffee Break (09h50):</div>
+              <p style="font-size: 14.5px;">Ver a mensagem <strong style="color: #34D399;">"Terraform has been successfully initialized!"</strong> no terminal.</p>
+            </div>
+          </div>
+
+          <div class="code-window">
+            <div class="code-topbar">
+              <div class="window-dots"><span></span><span></span><span></span></div>
+              <span>terraform/live-coding/versions.tf &amp; providers.tf</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><span class="hl-com"># versions.tf</span>
+<span class="hl-kw">terraform</span> {
+  <span class="hl-attr">required_version</span> = <span class="hl-str">"&gt;= 1.5.0"</span>
+  <span class="hl-kw">required_providers</span> {
+    <span class="hl-attr">google</span> = {
+      <span class="hl-attr">source</span>  = <span class="hl-str">"hashicorp/google"</span>
+      <span class="hl-attr">version</span> = <span class="hl-str">"~&gt; 5.0"</span>
+    }
+  }
+}
+
+<span class="hl-com"># providers.tf</span>
+<span class="hl-kw">provider</span> <span class="hl-type">"google"</span> {
+  <span class="hl-attr">project</span> = var.project_id
+  <span class="hl-attr">region</span>  = var.region
+  <span class="hl-attr">zone</span>    = var.zone
+}</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           SLIDE 12 — VPC EM MODO AUTO vs. MODO CUSTOM
+           ================================================================== -->
+      <section class="slide">
+        <div class="slide-header">
+          <div>
+            <div class="slide-eyebrow"><span class="pill">Módulo 03 • Etapa 01</span> Decisão de Arquitetura</div>
+            <h2 class="slide-title">Modo Auto vs. Modo Custom: Por que <code class="inline-code">auto_create_subnetworks = false</code>?</h2>
+          </div>
+          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card card-warn">
+            <div class="card-title"><span class="icon-badge amber">✕</span> VPC em Modo Automático (<code class="inline-code">true</code>)</div>
+            <ul class="feature-list">
+              <li>Cria automaticamente <strong>1 sub-rede `/20` em cada uma das +40 regiões do mundo</strong> dentro do bloco fixo <code class="inline-code">10.128.0.0/9</code>.</li>
+              <li><strong>Fatal para VPC Peering:</strong> Como todas as VPCs em modo Auto usam exatamente os mesmos IPs (<code class="inline-code">10.128.0.0/20</code> em <code class="inline-code">us-central1</code>), <strong>duas VPCs em modo Auto nunca conseguem fazer Peering entre si</strong>!</li>
+              <li>Gera dezenas de sub-redes desnecessárias em regiões onde você nunca vai operar.</li>
+            </ul>
+          </div>
+
+          <div class="card card-live">
+            <div class="card-title"><span class="icon-badge green">✓</span> VPC em Modo Customizado (<code class="inline-code">false</code>)</div>
+            <ul class="feature-list">
+              <li>A VPC nasce <strong>100% limpa</strong>, sem nenhuma sub-rede pré-criada.</li>
+              <li><strong>Controle Total de Engenharia:</strong> Você escolhe apenas as regiões que vai usar (<code class="inline-code">us-central1</code>) e define seu próprio bloco CIDR planejado (<code class="inline-code">10.&lt;student_id&gt;.0.0/24</code>).</li>
+              <li><strong>Pronta para Interconexão:</strong> Garante que não haverá sobreposição de IPs com o Hub Central nem com VPNs on-premises.</li>
+              <li>Habilitamos <code class="inline-code">private_ip_google_access = true</code> na sub-rede para acesso privado às APIs da Google.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           SLIDE 13 — LIVE CODING ETAPA 01: VPC E SUB-REDE (10h20–11h00)
+           ================================================================== -->
+      <section class="slide">
+        <div class="slide-header">
+          <div>
+            <div class="slide-eyebrow"><span class="pill pill-live">Mão na Massa • Etapa 01</span> 10h20 – 11h00 • Checkpoint: <code class="inline-code">labs/01-vpc-subnets/</code></div>
+            <h2 class="slide-title">Construindo nossa VPC Customizada e Sub-rede Regional</h2>
+          </div>
+          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+        </div>
+
+        <div class="grid-2-wide-right">
+          <div class="flex-col">
+            <div class="card card-live" style="flex: 1;">
+              <div class="card-title"><span class="icon-badge green">01</span> O que vamos codar agora</div>
+              <div class="flex-col" style="gap: 10px; margin-top: 4px;">
+                <div class="step-item"><span class="step-num">1</span><div><strong><code class="inline-code">locals.tf</code>:</strong> Calcular <code class="inline-code">student_suffix</code> e <code class="inline-code">subnet_cidr = "10.${var.student_id}.0.0/24"</code>.</div></div>
+                <div class="step-item"><span class="step-num">2</span><div><strong><code class="inline-code">vpc.tf</code>:</strong> Criar <code class="inline-code">google_compute_network</code> e <code class="inline-code">google_compute_subnetwork</code> vinculada por referência implícita.</div></div>
+                <div class="step-item"><span class="step-num">3</span><div><strong><code class="inline-code">outputs.tf</code>:</strong> Exibir o CIDR e o <code class="inline-code">gateway_address</code> (<code class="inline-code">10.&lt;ID&gt;.0.1</code>).</div></div>
+                <div class="step-item"><span class="step-num">4</span><div>Executar <code class="inline-code">terraform plan</code> e <code class="inline-code">terraform apply</code>!</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="code-window">
+            <div class="code-topbar">
+              <div class="window-dots"><span></span><span></span><span></span></div>
+              <span>terraform/live-coding/vpc.tf</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><span class="hl-kw">resource</span> <span class="hl-type">"google_compute_network"</span> <span class="hl-str">"vpc_aluno"</span> {
+  <span class="hl-attr">name</span>                    = local.vpc_name
+  <span class="hl-attr">auto_create_subnetworks</span> = <span class="hl-num">false</span>
+  <span class="hl-attr">routing_mode</span>            = <span class="hl-str">"REGIONAL"</span>
+  <span class="hl-attr">description</span>             = <span class="hl-str">"VPC Custom do ${local.student_suffix} (e-info FACAPE)"</span>
+}
+
+<span class="hl-kw">resource</span> <span class="hl-type">"google_compute_subnetwork"</span> <span class="hl-str">"subnet_principal"</span> {
+  <span class="hl-attr">name</span>                     = local.subnet_name
+  <span class="hl-attr">ip_cidr_range</span>            = local.subnet_cidr
+  <span class="hl-attr">region</span>                   = var.region
+  <span class="hl-attr">network</span>                  = google_compute_network.vpc_aluno.id
+  <span class="hl-attr">private_ip_google_access</span> = <span class="hl-num">true</span>
+}</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           SLIDE 14 — SEGURANÇA DE PERÍMETRO: FIREWALL STATEFUL & TAGS
+           ================================================================== -->
+      <section class="slide">
+        <div class="slide-header">
+          <div>
+            <div class="slide-eyebrow"><span class="pill">Módulo 04 • Etapa 02</span> Segurança de Rede na Nuvem</div>
+            <h2 class="slide-title">Como funciona o Firewall Stateful e as Network Tags no GCP</h2>
+          </div>
+          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+        </div>
+
+        <div class="grid-3">
+          <div class="card card-elevated">
+            <div class="card-title"><span class="icon-badge">01</span> Regras Implícitas da VPC</div>
+            <p>Toda VPC Custom nasce com 2 regras invisíveis de prioridade máxima (<code class="inline-code">65535</code>):</p>
+            <ul class="feature-list" style="margin-top: 6px;">
+              <li><strong style="color: #F87171;">Deny All Ingress:</strong> Ninguém entra em nenhuma VM se você não criar uma regra <code class="inline-code">ALLOW</code> explícita.</li>
+              <li><strong style="color: #34D399;">Allow All Egress:</strong> As VMs têm permissão para iniciar conexões de saída.</li>
+            </ul>
+          </div>
+
+          <div class="card card-tf">
+            <div class="card-title"><span class="icon-badge tf">02</span> O que é "Stateful"?</div>
+            <p>Em um firewall <strong>Stateless</strong> (antigo), você precisava liberar a entrada E também a saída da resposta.</p>
+            <p>No GCP, o firewall é <strong>Stateful</strong>: ele guarda uma tabela de conexões ativas (*conntrack*). Se o pacote de entrada foi permitido, <strong>o pacote de resposta volta automaticamente</strong>!</p>
+          </div>
+
+          <div class="card card-live">
+            <div class="card-title"><span class="icon-badge green">03</span> Microsegmentação com Tags</div>
+            <p>Em vez de liberar a porta <code class="inline-code">22</code> (SSH) para a VPC inteira, usamos <code class="inline-code">target_tags = ["ssh-iap"]</code> na regra de firewall.</p>
+            <p>A regra só se aplica às VMs que tiverem a etiqueta <code class="inline-code">tags = ["ssh-iap"]</code> declarada no Terraform!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           SLIDE 15 — CLOUD IAP: SSH EM VM 100% PRIVADA (SEM IP PÚBLICO)
+           ================================================================== -->
+      <section class="slide">
+        <div class="slide-header">
+          <div>
+            <div class="slide-eyebrow"><span class="pill">Módulo 04 • Arquitetura Zero-Trust</span> Sem IP Público, Sem Porta Exposta</div>
+            <h2 class="slide-title">Como fazer SSH em uma VM Privada usando Cloud IAP?</h2>
+          </div>
+          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+        </div>
+
+        <div class="grid-2" style="align-items: stretch;">
+          <div class="flex-col" style="justify-content: space-between;">
+            <div class="card" style="flex: 1;">
+              <div class="card-title"><span class="icon-badge amber">!</span> O perigo do IP Público + <code class="inline-code">0.0.0.0/0</code> na porta 22</div>
+              <p>Colocar um IP público numa VM e abrir a porta <code class="inline-code">22</code> para <code class="inline-code">0.0.0.0/0</code> faz com que ela receba milhares de tentativas de força bruta de bots em poucos minutos.</p>
+            </div>
+
+            <div class="card card-elevated" style="flex: 1.3;">
+              <div class="card-title"><span class="icon-badge green">🔒</span> A Solução Profissional: Cloud IAP TCP Forwarding</div>
+              <ul class="feature-list">
+                <li>Nossa VM nasce <strong>sem bloco <code class="inline-code">access_config</code></strong> (sem IP externo!).</li>
+                <li>O <strong>Identity-Aware Proxy (IAP)</strong> da Google autentica seu usuário via IAM/HTTPS e entrega seu SSH por dentro da rede interna da Google usando o bloco exclusivo <code class="inline-code">35.235.240.0/20</code>.</li>
+                <li>No Firewall, liberamos a porta <code class="inline-code">22</code> <strong>apenas</strong> para <code class="inline-code">35.235.240.0/20</code>!</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card" style="height: 100%; justify-content: center; align-items: center;">
+            <svg viewBox="0 0 600 400" width="100%" height="100%">
+              <!-- Notebook do Aluno (Largura 165px para caber --tunnel-through-iap com folga) -->
+              <rect x="16" y="140" width="165" height="120" rx="12" fill="#131C31" stroke="#60A5FA" stroke-width="2" />
+              <text x="98" y="178" text-anchor="middle" fill="#F8FAFC" font-family="Space Grotesk" font-size="15" font-weight="700">Terminal Aluno</text>
+              <text x="98" y="204" text-anchor="middle" fill="#93C5FD" font-family="JetBrains Mono" font-size="11">gcloud compute ssh</text>
+              <text x="98" y="224" text-anchor="middle" fill="#6EE7B7" font-family="JetBrains Mono" font-size="10.5">--tunnel-through-iap</text>
+
+              <!-- Túnel HTTPS até o Cloud IAP -->
+              <line x1="181" y1="200" x2="225" y2="200" stroke="#38BDF8" stroke-width="3" class="animated-flow" />
+              <text x="203" y="186" text-anchor="middle" fill="#7DD3FC" font-family="JetBrains Mono" font-size="10">TLS 443</text>
+
+              <!-- Proxy IAP da Google -->
+              <rect x="225" y="125" width="155" height="150" rx="14" fill="#1E1B4B" stroke="#8B5CF6" stroke-width="2" />
+              <text x="302" y="166" text-anchor="middle" fill="#F8FAFC" font-family="Space Grotesk" font-size="16" font-weight="700">Cloud IAP</text>
+              <text x="302" y="190" text-anchor="middle" fill="#C4B5FD" font-family="Plus Jakarta Sans" font-size="12">Valida IAM Google</text>
+              <rect x="239" y="210" width="127" height="38" rx="6" fill="#090D16" stroke="#8B5CF6" />
+              <text x="302" y="233" text-anchor="middle" fill="#FCD34D" font-family="JetBrains Mono" font-size="11">35.235.240.0/20</text>
+
+              <!-- Seta interna IAP -> VM Privada -->
+              <line x1="380" y1="200" x2="424" y2="200" stroke="#10B981" stroke-width="3" class="animated-flow" />
+              <text x="402" y="186" text-anchor="middle" fill="#6EE7B7" font-family="JetBrains Mono" font-size="10">TCP 22</text>
+
+              <!-- VPC / VM Privada -->
+              <rect x="424" y="90" width="160" height="220" rx="14" fill="#0D1F1C" stroke="#10B981" stroke-width="2" />
+              <text x="504" y="122" text-anchor="middle" fill="#6EE7B7" font-family="JetBrains Mono" font-size="11" font-weight="700">SUBNET DO ALUNO</text>
+              <rect x="440" y="142" width="128" height="140" rx="10" fill="#090D16" stroke="#34D399" stroke-width="1.5" />
+              <text x="504" y="176" text-anchor="middle" fill="#F8FAFC" font-family="Space Grotesk" font-size="15" font-weight="700">VM Privada</text>
+              <text x="504" y="200" text-anchor="middle" fill="#34D399" font-family="JetBrains Mono" font-size="12">10.&lt;ID&gt;.0.2</text>
+              <text x="504" y="226" text-anchor="middle" fill="#F87171" font-family="JetBrains Mono" font-size="11">IP Ext: NONE</text>
+              <text x="504" y="250" text-anchor="middle" fill="#93C5FD" font-family="JetBrains Mono" font-size="11">tag: ssh-iap</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           SLIDE 16 — LIVE CODING ETAPA 02: FIREWALL + VM + TESTE ANTES DO ALMOÇO
+           ================================================================== -->
+      <section class="slide">
+        <div class="slide-header">
+          <div>
+            <div class="slide-eyebrow"><span class="pill pill-live">Mão na Massa • Etapa 02</span> 11h20 – 12h00 • Checkpoint: <code class="inline-code">labs/02-firewall-vms/</code></div>
+            <h2 class="slide-title">Subindo Firewall + VM Privada e o Mistério antes do Almoço!</h2>
+          </div>
+          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+        </div>
+
+        <div class="grid-2-wide-right">
+          <div class="flex-col" style="justify-content: space-between;">
+            <div class="card card-live" style="flex: 1;">
+              <div class="card-title"><span class="icon-badge green">02</span> Passo a Passo do Lab 02</div>
+              <div class="flex-col" style="gap: 8px;">
+                <div class="step-item"><span class="step-num">1</span><div>Criar <code class="inline-code">firewall.tf</code> liberando <code class="inline-code">tcp:22</code> para <code class="inline-code">35.235.240.0/20</code> (tag <code class="inline-code">ssh-iap</code>) e <code class="inline-code">icmp</code> para <code class="inline-code">10.0.0.0/8</code>.</div></div>
+                <div class="step-item"><span class="step-num">2</span><div>Criar <code class="inline-code">compute.tf</code> provisionando a VM <code class="inline-code">e2-micro</code> <strong>sem bloco <code class="inline-code">access_config</code></strong>.</div></div>
+                <div class="step-item"><span class="step-num">3</span><div>Rodar <code class="inline-code">terraform apply</code> e entrar via SSH usando o comando gerado no output!</div></div>
+              </div>
+            </div>
+
+            <div class="card card-warn" style="flex-shrink: 0;">
+              <div class="card-title"><span class="icon-badge amber">?</span> O Desafio das 11h50 (Dentro da VM):</div>
+              <p style="font-size: 14.5px;">Conectou no SSH da sua VM privada? Rode <code class="inline-code">ip a</code> (veja seu IP <code class="inline-code">10.&lt;ID&gt;.0.2</code>) e depois tente rodar <code class="inline-code">ping -c 3 8.8.8.8</code>.<br/><strong>Por que dá <code class="inline-code">100% packet loss</code>? Resolveremos às 14h00!</strong></p>
+            </div>
+          </div>
+
+          <div class="code-window">
+            <div class="code-topbar">
+              <div class="window-dots"><span></span><span></span><span></span></div>
+              <span>terraform/live-coding/firewall.tf &amp; compute.tf</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><span class="hl-kw">resource</span> <span class="hl-type">"google_compute_firewall"</span> <span class="hl-str">"allow_ssh_iap"</span> {
+  <span class="hl-attr">name</span>          = <span class="hl-str">"fw-allow-ssh-iap-${local.student_suffix}"</span>
+  <span class="hl-attr">network</span>       = google_compute_network.vpc_aluno.name
+  <span class="hl-attr">direction</span>     = <span class="hl-str">"INGRESS"</span>
+  <span class="hl-attr">source_ranges</span> = [<span class="hl-str">"35.235.240.0/20"</span>]
+  <span class="hl-attr">target_tags</span>   = [<span class="hl-str">"ssh-iap"</span>]
+  <span class="hl-kw">allow</span> {
+    <span class="hl-attr">protocol</span> = <span class="hl-str">"tcp"</span>
+    <span class="hl-attr">ports</span>    = [<span class="hl-str">"22"</span>]
+  }
+}
+
+<span class="hl-kw">resource</span> <span class="hl-type">"google_compute_instance"</span> <span class="hl-str">"vm_aluno"</span> {
+  <span class="hl-attr">name</span>         = <span class="hl-str">"vm-teste-${local.student_suffix}"</span>
+  <span class="hl-attr">machine_type</span> = <span class="hl-str">"e2-micro"</span>
+  <span class="hl-attr">zone</span>         = var.zone
+  <span class="hl-attr">tags</span>         = [<span class="hl-str">"ssh-iap"</span>]
+  <span class="hl-kw">boot_disk</span> {
+    <span class="hl-kw">initialize_params</span> { <span class="hl-attr">image</span> = <span class="hl-str">"debian-cloud/debian-12"</span> }
+  }
+  <span class="hl-kw">network_interface</span> {
+    <span class="hl-attr">subnetwork</span> = google_compute_subnetwork.subnet_principal.id
+  }
+}</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rodapé de Navegação (Sem botão de notas na projeção) -->
+      <footer class="deck-footer">
+        <div class="footer-left">
+          <span><strong>Redes.tf</strong> • Turno da Manhã (08h00–12h00)</span>
+          <span>|</span>
+          <span>Luan Sousa • e-info FACAPE</span>
+        </div>
+        <div class="footer-controls">
+          <a href="../index.html" class="ctrl-btn">⌂ Menu</a>
+          <button class="ctrl-btn" id="btn-fs" title="Atalho: F">Tela Cheia (F)</button>
+          <button class="ctrl-btn" id="btn-prev" title="Seta Esquerda">← Anterior</button>
+          <span id="slide-counter" style="font-family: var(--font-mono); min-width: 64px; text-align: center; color: var(--text-primary); font-weight: 700;">01 / 16</span>
+          <button class="ctrl-btn" id="btn-next" title="Seta Direita">Próximo →</button>
+          <a href="../02-tarde-pratica-avancada/index.html" class="ctrl-btn" style="border-color: rgba(139,92,246,0.45); color: #C4B5FD;">Deck Tarde ➔</a>
+        </div>
+      </footer>
+    </div>
+  </div>
+  <script src="../assets/slides.js"></script>
+</body>
+</html>
