@@ -25,6 +25,8 @@ terraform.rc
 !package-lock.json
 !tsconfig.json
 *.pem
+# Lista de alunos com e-mails (dados pessoais) — nunca versionar
+**/students.csv
 *.key
 .gcloud/
 

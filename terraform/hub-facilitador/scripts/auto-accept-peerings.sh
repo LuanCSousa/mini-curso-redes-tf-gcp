@@ -2,12 +2,15 @@
 # ==============================================================================
 # Auto-Aceitação de VPC Network Peerings dos Alunos (Hub Central -> Alunos 01..40)
 # ==============================================================================
-# Durante a Etapa 04 (15h25–16h40), basta deixar este script rodando no terminal
-# do facilitador (ou acioná-lo no Cloud Run). Ele varre os projetos dos grupos,
+# Durante a Etapa 04 (15h00–16h05), basta deixar este script rodando no terminal
+# do facilitador. Ele varre os projetos dos grupos,
 # detecta todas as VPCs `vpc-redes-tf-aluno-XX` recém-criadas pelos alunos e cria
 # automaticamente o peering recíproco no Hub correspondente:
 #   - Alunos 01 a 20 -> `vpc-hub-turma-a`
 #   - Alunos 21 a 40 -> `vpc-hub-turma-b`
+#
+# IMPORTANTE: não use junto com `active_student_peerings` do Terraform
+# (os dois criam peerings com o mesmo nome).
 #
 # COMO USAR:
 #   chmod +x scripts/auto-accept-peerings.sh

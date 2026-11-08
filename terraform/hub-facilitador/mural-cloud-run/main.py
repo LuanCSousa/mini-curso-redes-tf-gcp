@@ -1,10 +1,19 @@
+import html
 import json
 import os
 from datetime import datetime, timezone, timedelta
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 PORT = int(os.environ.get("PORT", "8080"))
+
+# ATENÇÃO: estado em memória. Faça o deploy com --min-instances=1 --max-instances=1
+# para que os cards não sumam (scale-to-zero) nem se dividam entre instâncias.
 CHECKINS = {}
+
+
+def esc(value):
+    """Escapa qualquer texto vindo dos alunos antes de exibir no telão (evita XSS)."""
+    return html.escape(str(value if value is not None else ""))
 
 
 class MuralHandler(BaseHTTPRequestHandler):
@@ -26,9 +35,9 @@ class MuralHandler(BaseHTTPRequestHandler):
                 cards += f"""
                 <div class="card active">
                   <div class="badge">● ACTIVE • ALUNO {sid:02d}</div>
-                  <div class="name">{item.get('nome')}</div>
-                  <div class="meta">Subnet: {item.get('subnet')} | Origem: {item.get('source_ip')}</div>
-                  <div class="hub">{item.get('hub')} • {item.get('horario')}</div>
+                  <div class="name">{esc(item.get('nome'))}</div>
+                  <div class="meta">Subnet: {esc(item.get('subnet'))} | Origem: {esc(item.get('source_ip'))}</div>
+                  <div class="hub">{esc(item.get('hub'))} • {esc(item.get('horario'))}</div>
                 </div>"""
             else:
                 cards += f"""
@@ -82,10 +91,17 @@ class MuralHandler(BaseHTTPRequestHandler):
             self.send_response(404)
             self.end_headers()
             return
-        length = int(self.headers.get("Content-Length", 0))
-        raw = self.rfile.read(length).decode("utf-8") if length > 0 else "{}"
-        payload = json.loads(raw)
-        sid = str(payload.get("student_id", "0"))
+        length = min(int(self.headers.get("Content-Length", 0) or 0), 4096)
+        raw = self.rfile.read(length).decode("utf-8", errors="replace") if length > 0 else "{}"
+        try:
+            payload = json.loads(raw)
+        except Exception:
+            payload = None
+        if not isinstance(payload, dict) or not str(payload.get("student_id", "")).isdigit():
+            self.send_response(400)
+            self.end_headers()
+            return
+        sid = str(int(payload["student_id"]))
         tz_br = timezone(timedelta(hours=-3))
         payload.setdefault("horario", datetime.now(tz_br).strftime("%H:%M:%S"))
         CHECKINS[sid] = payload
