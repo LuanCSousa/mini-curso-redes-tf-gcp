@@ -65,7 +65,7 @@ resource "google_compute_instance" "vm_coletora" {
     DATA_FILE = "/var/lib/redes-tf/checkins.json"
     HUB_NAME = "${each.value.vpc_name}"
     COLLECTOR_IP = "${each.value.collector_ip}"
-    MURAL_URL = "${var.mural_cloud_run_url}".rstrip("/")
+    MURAL_URL = "${local.mural_url}".rstrip("/")
     METADATA_TOKEN_URL = "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity?audience="
 
     def mural_id_token():

@@ -6,9 +6,8 @@
 # 2. (Opcional) Com DELETE_PROJECTS=true, apaga os projetos de grupo inteiros
 #    (VMs, NATs e VPCs esquecidas pelos alunos vão junto). Pede confirmação.
 #
-# O Hub em si (VPCs, VMs coletoras, NAT) deve ser removido com `terraform destroy`
-# dentro de terraform/hub-facilitador/, e o mural com:
-#   gcloud run services delete mural-redes-tf --region=us-central1 --project=$HUB_PROJECT_ID
+# O Hub em si (VPCs, VMs coletoras, NAT, Mural no Cloud Run e sua imagem) deve
+# ser removido com `terraform destroy` dentro de terraform/hub-facilitador/.
 #
 # COMO USAR:
 #   ./scripts/cleanup-pos-evento.sh

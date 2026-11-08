@@ -20,15 +20,15 @@ variable "zone" {
   default     = "us-central1-a"
 }
 
-variable "mural_cloud_run_url" {
-  type        = string
-  description = "URL opcional do serviço Cloud Run do Mural ao Vivo para onde as VMs coletoras encaminham os check-ins."
-  default     = ""
+variable "enable_mural" {
+  type        = bool
+  description = "Cria o Mural ao Vivo no Cloud Run (privado). Requer gcloud autenticado na máquina que roda o apply (build da imagem). Com false, cada VM coletora serve só o próprio mural."
+  default     = true
 }
 
 variable "mural_service_name" {
   type        = string
-  description = "Nome do serviço Cloud Run do Mural (usado na permissão run.invoker das VMs coletoras)."
+  description = "Nome do serviço Cloud Run do Mural (Cloud Run)."
   default     = "mural-redes-tf"
 }
 

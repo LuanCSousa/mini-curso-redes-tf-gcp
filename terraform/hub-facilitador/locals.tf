@@ -24,6 +24,10 @@ locals {
     }
   }
 
+  # URL do Mural no Cloud Run ("" se desativado). Referência direta ao recurso:
+  # o grafo do Terraform cria o Mural antes das VMs coletoras.
+  mural_url = var.enable_mural ? google_cloud_run_v2_service.mural[0].uri : ""
+
   common_labels = {
     evento     = "e-info-facape"
     minicurso  = "redes-tf-gcp"

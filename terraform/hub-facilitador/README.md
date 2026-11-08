@@ -16,7 +16,7 @@ Este diretório contém toda a **Infraestrutura como Código (Terraform)** e os 
      - **`vpc-hub-turma-a` (`10.0.1.0/24`):** Recebe os Peerings dos **Alunos 01 a 20**; VM coletora `vm-coletora-turma-a` em **`10.0.1.10`**.
      - **`vpc-hub-turma-b` (`10.0.2.0/24`):** Recebe os Peerings dos **Alunos 21 a 40**; VM coletora `vm-coletora-turma-b` em **`10.0.2.10`**.
 3. **VMs Coletoras:** servidor HTTP na porta `80` que recebe `POST /checkin`. O **`student_id` é derivado do IP privado real de origem** (`10.<ID>.0.x`) — o payload só informa o `nome`. Origens fora de `10.1–40.0.0/24` recebem `403`. Cada VM também serve um mural próprio em `GET /`.
-4. **Mural no Cloud Run (opcional, privado):** painel unificado com os 40 cards, alimentado pelas VMs coletoras (que saem via Cloud NAT do Hub). O serviço **não aceita requisições anônimas**: as VMs se autenticam com a service account `sa-vm-coletora` (papel `roles/run.invoker`, via ID token do metadata server) e o facilitador visualiza pelo proxy autenticado do `gcloud`. Assim, ninguém na internet lê ou posta cards — o único caminho para acender um card é o VPC Peering até uma VM coletora. O Cloud Run **só exibe o mural**; o aceite dos peerings é feito pelo script local (seção 3).
+4. **Mural no Cloud Run (privado, criado pelo próprio Terraform):** painel unificado com os 40 cards, alimentado pelas VMs coletoras (que saem via Cloud NAT do Hub). O serviço **não aceita requisições anônimas**: as VMs se autenticam com a service account `sa-vm-coletora` (papel `roles/run.invoker`, via ID token do metadata server) e o facilitador visualiza pelo proxy autenticado do `gcloud`. Assim, ninguém na internet lê ou posta cards — o único caminho para acender um card é o VPC Peering até uma VM coletora. O Cloud Run **só exibe o mural**; o aceite dos peerings é feito pelo script local (seção 3).
 
 ---
 
@@ -34,21 +34,27 @@ cp scripts/students.csv.example scripts/students.csv
 BILLING_ACCOUNT_ID="SEU_BILLING_ACCOUNT_ID" ./scripts/setup-projetos-grupos.sh
 ```
 
-### Passo 2 (Opcional): Publicar o Mural Unificado no Cloud Run — ANTES do `terraform apply`
-O mural guarda os check-ins **em memória**. Por isso, fixe **exatamente 1 instância** (sem scale-to-zero e sem dividir o estado entre instâncias). E publique-o **privado** (sem acesso anônimo):
-```bash
-gcloud services enable run.googleapis.com iam.googleapis.com cloudbuild.googleapis.com \
-  --project=einfo-redes-hub-central
+### Passo 2: Subir o Hub Central (VPCs, VMs Coletoras e Mural) — um único `terraform apply`
+Pré-requisito: `gcloud auth login` e `gcloud auth application-default login` com a conta Owner do projeto do Hub (o build da imagem do Mural roda `gcloud builds submit` na sua máquina).
 
-gcloud run deploy mural-redes-tf \
-  --source=./mural-cloud-run \
-  --region=us-central1 \
-  --project=einfo-redes-hub-central \
-  --no-allow-unauthenticated \
-  --min-instances=1 \
-  --max-instances=1
+```bash
+cp terraform.tfvars.example terraform.tfvars
+# Edite hub_project_id (e enable_mural = false se não quiser o Cloud Run)
+
+terraform init
+terraform apply
 ```
-Copie a URL exibida (`https://mural-redes-tf-....run.app`) para `mural_cloud_run_url` no `terraform.tfvars`. No Passo 3, o Terraform cria a service account `sa-vm-coletora`, anexa às VMs coletoras e concede a ela `roles/run.invoker` **somente** neste serviço ([`mural.tf`](./mural.tf)).
+
+O Terraform resolve a ordem sozinho pelo grafo de dependências ([`mural.tf`](./mural.tf)):
+1. Ativa as APIs (Cloud Run, Artifact Registry, Cloud Build) e cria o repositório Docker `mural-redes-tf`;
+2. Builda a imagem de [`mural-cloud-run/`](./mural-cloud-run) (tag = hash do código: só rebuilda quando `main.py`/`Dockerfile` mudam);
+3. Publica o serviço `mural-redes-tf` **privado** (sem `allUsers`) com **exatamente 1 instância** — o estado fica em memória, então nada de scale-to-zero nem de dividir o estado;
+4. Cria a service account `sa-vm-coletora` com `roles/run.invoker` **somente** nesse serviço;
+5. Só então cria as VMs coletoras, já com a URL do Mural no startup script.
+
+A URL do Cloud Run é estável: atualizar o código do mural gera uma nova revisão **sem recriar as VMs coletoras**.
+
+> **Erro de permissão no build?** Desde 2024, o Cloud Build usa por padrão a service account padrão do Compute Engine. Se uma política da organização bloqueia os papéis automáticos dela, conceda `roles/artifactregistry.writer`, `roles/storage.objectViewer` e `roles/logging.logWriter` a `<PROJECT_NUMBER>-compute@developer.gserviceaccount.com` e rode o `apply` de novo.
 
 #### Abrindo o Mural no projetor (com a sua conta Google)
 No computador ligado ao projetor, autenticado com `gcloud auth login` (conta Owner do projeto do Hub, que já tem `run.invoker`):
@@ -58,24 +64,14 @@ $(terraform output -raw mural_proxy_cmd)
 ```
 Abra **http://localhost:8080** no navegador e coloque em tela cheia. O proxy injeta o seu token em cada requisição; feche-o com `Ctrl+C` ao final.
 
-> Se não quiser usar Cloud Run, pule este passo: cada VM coletora já serve seu próprio mural na porta 80 (veja os outputs `tunnel_mural_turma_a_cmd` / `tunnel_mural_turma_b_cmd`).
+> Sem Cloud Run (`enable_mural = false`): cada VM coletora serve seu próprio mural na porta 80 (veja os outputs `tunnel_mural_turma_a_cmd` / `tunnel_mural_turma_b_cmd`).
 
-### Passo 3: Subir o Hub Central (`vpc-hub-turma-a`, `vpc-hub-turma-b` e VMs Coletoras)
-```bash
-cp terraform.tfvars.example terraform.tfvars
-# Edite hub_project_id e (se fez o Passo 2) mural_cloud_run_url
-
-terraform init
-terraform apply
-```
-> Alterar `mural_cloud_run_url` depois muda o `metadata_startup_script` e **recria as VMs coletoras** (os IPs `10.0.1.10`/`10.0.2.10` são fixos, então os alunos não são afetados — mas os check-ins guardados na VM são perdidos). Prefira definir a URL antes do primeiro apply.
-
-### Passo 4: Ensaio Ponta a Ponta (obrigatório na véspera)
+### Passo 3: Ensaio Ponta a Ponta (obrigatório na véspera)
 Use um `student_id` de teste (ex: `40`, num projeto de grupo) e rode o fluxo completo de um aluno:
 1. `terraform apply` em `terraform/labs/04-vpc-peering-hub/` com o `student_id` de teste.
 2. `./scripts/auto-accept-peerings.sh` → peering `ACTIVE` dos dois lados.
 3. SSH via IAP na VM de teste → `ping -c 3 10.0.2.10` e o `curl` do output `comando_checkin_mural`.
-4. Card aparece no mural (VM coletora e Cloud Run via `mural_proxy_cmd`). Confirme também que o mural está **privado**: `curl -s -o /dev/null -w '%{http_code}' https://mural-redes-tf-....run.app/` deve retornar `403`.
+4. Card aparece no mural (VM coletora e Cloud Run via `mural_proxy_cmd`). Confirme também que o mural está **privado**: `curl -s -o /dev/null -w '%{http_code}' "$(terraform output -raw mural_url)"` (rodado em `terraform/hub-facilitador/`) deve retornar `403`.
 5. `terraform destroy` do aluno de teste.
 
 ---
@@ -103,7 +99,6 @@ A cada 15 segundos ele detecta qualquer `vpc-redes-tf-aluno-XX` nos projetos `ei
 # (Opcional) Também apaga os 10 projetos de grupo (pede confirmação digitando APAGAR)
 DELETE_PROJECTS=true ./scripts/cleanup-pos-evento.sh
 
-# Remove o Hub e o mural
+# Remove o Hub, o Mural no Cloud Run e o repositório da imagem
 terraform destroy
-gcloud run services delete mural-redes-tf --region=us-central1 --project=einfo-redes-hub-central
 ```

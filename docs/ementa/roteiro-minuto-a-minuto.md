@@ -7,7 +7,7 @@ Este documento é o **guia de palco e condução técnica** de **Luan Sousa** pa
 ## Checklist da Véspera (obrigatório)
 
 - [ ] **Projetos dos grupos e IAM:** `scripts/setup-projetos-grupos.sh` executado com `scripts/students.csv` preenchido (projetos `einfo-redes-grupo-01..10`, VPC `default` removida, OS Login ativo e papéis dos alunos concedidos).
-- [ ] **Hub Central de pé (`terraform/hub-facilitador/`):** Cloud Run do mural publicado **privado** (`--no-allow-unauthenticated`) com `--min-instances=1 --max-instances=1` **antes** do `terraform apply` (URL em `mural_cloud_run_url`). Um `curl` anônimo na URL deve retornar `403`.
+- [ ] **Hub Central de pé (`terraform/hub-facilitador/`):** um único `terraform apply` sobe VPCs, VMs coletoras e o Mural no Cloud Run (privado, 1 instância). Um `curl` anônimo em `terraform output -raw mural_url` deve retornar `403`.
 - [ ] **Ensaio ponta a ponta com um `student_id` de teste** (ex: `40`): `terraform apply` do lab 04 → `auto-accept-peerings.sh` → peering `ACTIVE` → SSH IAP → `ping 10.0.2.10` → `curl` de check-in → card no mural → `terraform destroy`.
 - [ ] **Slides:** abrir `slides/index.html` offline (fontes locais) e conferir as notas do apresentador (tecla `N`).
 

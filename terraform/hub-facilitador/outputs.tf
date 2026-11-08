@@ -30,7 +30,12 @@ output "tunnel_mural_turma_b_cmd" {
   value       = "gcloud compute start-iap-tunnel vm-coletora-turma-b 80 --local-host-port=localhost:8082 --zone=${var.zone} --project=${var.hub_project_id}"
 }
 
+output "mural_url" {
+  description = "URL do Mural no Cloud Run (privado: um curl anônimo deve retornar 403)."
+  value       = local.mural_url
+}
+
 output "mural_proxy_cmd" {
   description = "Abre o Mural do Cloud Run (privado) em http://localhost:8080 autenticando com a sua conta gcloud. Use no computador ligado ao projetor."
-  value       = "gcloud run services proxy ${var.mural_service_name} --region=${var.region} --project=${var.hub_project_id} --port=8080"
+  value       = var.enable_mural ? "gcloud run services proxy ${var.mural_service_name} --region=${var.region} --project=${var.hub_project_id} --port=8080" : null
 }

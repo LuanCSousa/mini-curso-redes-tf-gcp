@@ -5,4 +5,4 @@
 hub_project_id      = "einfo-redes-hub-central"
 region              = "us-central1"
 zone                = "us-central1-a"
-mural_cloud_run_url = ""
+enable_mural        = true
