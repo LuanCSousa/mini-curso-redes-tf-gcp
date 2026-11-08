@@ -113,6 +113,7 @@
             </svg>
           </div>
         </div>
+        <aside class="notes">⏱ 08h00–08h05. Boas-vindas. Apresente o título e a proposta: hoje ninguém cria rede clicando no console; vamos construir como engenheiros de nuvem fazem em produção. Peça para todos abrirem o terminal (local ou Cloud Shell) enquanto você se apresenta.</aside>
       </section>
 
       <!-- ==================================================================
@@ -171,6 +172,7 @@
             </div>
           </div>
         </div>
+        <aside class="notes">⏱ 08h05–08h15. Trajetória: FACAPE → SantoDigital (parceira Google Cloud), Cloud Engineer, projetos de DevOps/SecOps. Reforce a filosofia: Console só para INSPECIONAR; tudo é criado por código. Metodologia: live coding em terraform/live-coding/ e labs/ como checkpoint.</aside>
       </section>
 
       <!-- ==================================================================
@@ -232,6 +234,7 @@
             </div>
           </div>
         </div>
+        <aside class="notes">⏱ 08h15. Mapa do dia. Destaque os 2 intervalos (09h50 e 16h05), o gancho antes do almoço (ping 8.8.8.8 falhando) e o grand finale (mural no telão + migração para módulos com moved).</aside>
       </section>
 
       <!-- ==================================================================
@@ -285,7 +288,7 @@
 
             <div class="card card-warn" style="padding: 14px 18px; flex-shrink: 0;">
               <div style="font-size: 14.5px; color: #FDE68A; line-height: 1.4;">
-                <strong>Isolamento em Projetos de Grupo:</strong> Até 4 alunos compartilham um projeto GCP (<code class="inline-code">einfo-redes-grupo-XX</code>). Como seu Terraform usa sempre o sufixo <code class="inline-code">aluno-XX</code> e seu próprio <code class="inline-code">terraform.tfstate</code>, um aluno jamais altera a rede do colega!
+                <strong>Isolamento em Projetos de Grupo:</strong> Até 4 alunos compartilham um projeto GCP (<code class="inline-code">einfo-redes-grupo-XX</code>). Como seu Terraform usa sempre o sufixo <code class="inline-code">aluno-XX</code> e seu próprio <code class="inline-code">terraform.tfstate</code>, cada aluno gerencia apenas a própria rede — o IAM não separa colegas do mesmo projeto, então combine: <strong>só mexa nos recursos <code class="inline-code">aluno-XX</code> com o seu número</strong>.
               </div>
             </div>
           </div>
@@ -309,6 +312,7 @@
 <span class="hl-cmd">cd</span> terraform/live-coding</pre>
           </div>
         </div>
+        <aside class="notes">⏱ 08h15–08h25. Check-in: cada aluno confirma student_id (1–40) e project_id (grupo = ceil(ID/4)). Rodar 'gcloud config get-value project'. Quem não fez o pré-material: Cloud Shell + foundation-check agora. Lembre: 4 colegas no mesmo projeto — só mexa nos recursos aluno-XX com o SEU número.</aside>
       </section>
 
       <!-- ==================================================================
@@ -344,6 +348,7 @@
             </ul>
           </div>
         </div>
+        <aside class="notes">⏱ 08h25–08h30. Da rede física à SDN Andromeda: não há switch/roteador para cabear; a rede é programada. VPC é global, sub-rede regional, VM zonal (próximos slides).</aside>
       </section>
 
       <!-- ==================================================================
@@ -387,7 +392,7 @@
           <div class="grid-3" style="flex: 1;">
             <div class="card">
               <div style="font-family: var(--font-mono); font-size: 13px; color: var(--gcp-cyan); font-weight: 700;">Analogia do CEP</div>
-              <p>Os 24 bits iniciais (<code class="inline-code">10.7.0</code>) são o <strong>nome da rua</strong>. Os 8 bits finais (<code class="inline-code">.1</code> a <code class="inline-code">.254</code>) são o <strong>número de cada casa (VM)</strong> naquela rua.</p>
+              <p>Os 24 bits iniciais (<code class="inline-code">10.7.0</code>) são o <strong>nome da rua</strong>. Os 8 bits finais (<code class="inline-code">.0</code> a <code class="inline-code">.255</code>) são o <strong>número de cada casa</strong> naquela rua — no GCP, as VMs moram do <code class="inline-code">.2</code> ao <code class="inline-code">.253</code>.</p>
             </div>
             <div class="card">
               <div style="font-family: var(--font-mono); font-size: 13px; color: #C4B5FD; font-weight: 700;">E se fosse /16?</div>
@@ -399,6 +404,7 @@
             </div>
           </div>
         </div>
+        <aside class="notes">⏱ 08h30–08h40. CIDR /24: 24 bits de rede (10.7.0), 8 de host. Faça a conta junto: 2^8 = 256 endereços. Pergunte: e um /16? Por que cada aluno usa 10.&lt;ID&gt;.0.0/24? → evitar overlap no peering da tarde.</aside>
       </section>
 
       <!-- ==================================================================
@@ -465,6 +471,7 @@
             </div>
           </div>
         </div>
+        <aside class="notes">⏱ 08h40–08h45. Os 4 IPs reservados do GCP: .0 rede, .1 gateway, .254 reservado, .255 broadcast → 252 utilizáveis (.2 a .253). Por isso a VM de vocês vai nascer com .2.</aside>
       </section>
 
       <!-- ==================================================================
@@ -521,7 +528,7 @@
               <text x="424" y="102" text-anchor="middle" fill="#7DD3FC" font-family="JetBrains Mono" font-size="11.5" font-weight="700">REGIÃO: southamerica-east1</text>
               <text x="424" y="124" text-anchor="middle" fill="#F8FAFC" font-family="JetBrains Mono" font-size="13">Subnet: 10.107.0.0/24</text>
               <rect x="324" y="145" width="200" height="98" rx="8" fill="#080D1A" stroke="#475569" stroke-width="1.5" />
-              <text x="424" y="172" text-anchor="middle" fill="#94A3B8" font-family="JetBrains Mono" font-size="11.5">Zona: sa-east1-a (SP)</text>
+              <text x="424" y="172" text-anchor="middle" fill="#94A3B8" font-family="JetBrains Mono" font-size="11.5">Zona: southamerica-east1-a</text>
               <text x="424" y="200" text-anchor="middle" fill="#CBD5E1" font-family="Space Grotesk" font-size="15">VM: 10.107.0.2</text>
 
               <!-- Fibra interna entre regiões -->
@@ -532,6 +539,7 @@
             </svg>
           </div>
         </div>
+        <aside class="notes">⏱ 08h45–09h00. Escopos: VPC global, sub-rede regional, VM zonal. Mostre que duas regiões na mesma VPC conversam pela fibra interna da Google sem VPN.</aside>
       </section>
 
       <!-- ==================================================================
@@ -572,6 +580,7 @@
             </ul>
           </div>
         </div>
+        <aside class="notes">⏱ 09h00–09h10. ClickOps vs IaC: histórico, revisão em PR, reprodutibilidade, destroy limpo. Pergunta para a turma: quem já apagou uma regra de firewall errada no painel?</aside>
       </section>
 
       <!-- ==================================================================
@@ -630,6 +639,7 @@
             </div>
           </div>
         </div>
+        <aside class="notes">⏱ 09h10–09h20. Anatomia do HCL: provider, resource, variable, locals, output. O papel do terraform.tfstate. Ciclo init → fmt → validate → plan → apply → destroy.</aside>
       </section>
 
       <!-- ==================================================================
@@ -686,6 +696,21 @@
 }</pre>
           </div>
         </div>
+        <aside class="notes">⏱ 09h20–09h50. LIVE CODING 00 em terraform/live-coding/: versions.tf (&gt;= 1.5, google ~&gt; 5.0), providers.tf, variables.tf (student_id com validation 1–40), terraform.tfvars. Rodar terraform init. Erros comuns: ADC → 'gcloud auth application-default login'; API → 'gcloud services enable compute.googleapis.com'.</aside>
+      </section>
+
+      <!-- ==================================================================
+           INTERVALO — Coffee Break ☕ (09h50 – 10h10)
+           ================================================================== -->
+      <section class="slide slide-break">
+        <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 22px;">
+          <div class="header-brand" style="justify-content: center;"><img src="../assets/logo-einfo.png" alt="e-info 2026" class="logo-einfo" /><span class="brand-divider"></span><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+          <span class="pill pill-live">09h50 – 10h10</span>
+          <h2 style="font-family: var(--font-display); font-size: 64px; font-weight: 700; letter-spacing: -0.02em;">Coffee Break ☕</h2>
+          <p style="font-size: 20px; color: var(--text-secondary); max-width: 900px;">Antes de sair: confira se o seu <code class="inline-code">terraform init</code> terminou com sucesso. Se não, chame o facilitador!</p>
+          <div class="card card-elevated" style="padding: 14px 24px; font-family: var(--font-mono); color: #6EE7B7; font-size: 16px;">Na volta: Etapa 01 — VPC Customizada e Sub-rede (10h10)</div>
+        </div>
+        <aside class="notes">⏱ 09h50–10h10. Coffee break. Nos primeiros 5 min, circule pela sala garantindo que 100% rodaram o terraform init.</aside>
       </section>
 
       <!-- ==================================================================
@@ -720,6 +745,7 @@
             </ul>
           </div>
         </div>
+        <aside class="notes">⏱ 10h10–10h25. Modo auto vs custom: auto cria sub-redes em todas as regiões em 10.128.0.0/9 → duas VPCs auto não fazem peering. Sempre auto_create_subnetworks = false.</aside>
       </section>
 
       <!-- ==================================================================
@@ -769,6 +795,7 @@
 }</pre>
           </div>
         </div>
+        <aside class="notes">⏱ 10h25–11h00. LIVE CODING Etapa 01: locals.tf (student_suffix, subnet_cidr), vpc.tf (network + subnetwork; mostre a referência implícita = grafo de dependência), outputs.tf. fmt/validate/plan ('2 to add') e apply. Abra o Console &gt; VPC networks. Checkpoint: cp ../labs/01-vpc-subnets/*.tf .</aside>
       </section>
 
       <!-- ==================================================================
@@ -786,7 +813,7 @@
         <div class="grid-3">
           <div class="card card-elevated">
             <div class="card-title"><span class="icon-badge">01</span> Regras Implícitas da VPC</div>
-            <p>Toda VPC Custom nasce com 2 regras invisíveis de prioridade máxima (<code class="inline-code">65535</code>):</p>
+            <p>Toda VPC nasce com 2 regras implícitas de prioridade <strong>mais baixa</strong> possível (<code class="inline-code">65535</code> — qualquer regra sua vence):</p>
             <ul class="feature-list" style="margin-top: 6px;">
               <li><strong style="color: #F87171;">Deny All Ingress:</strong> Ninguém entra em nenhuma VM se você não criar uma regra <code class="inline-code">ALLOW</code> explícita.</li>
               <li><strong style="color: #34D399;">Allow All Egress:</strong> As VMs têm permissão para iniciar conexões de saída.</li>
@@ -805,6 +832,7 @@
             <p>A regra só se aplica às VMs que tiverem a etiqueta <code class="inline-code">tags = ["ssh-iap"]</code> declarada no Terraform!</p>
           </div>
         </div>
+        <aside class="notes">⏱ 11h00–11h10. Firewall: regras implícitas de prioridade MAIS BAIXA (65535): deny ingress / allow egress. Stateful = conntrack: a resposta volta sozinha. Network tags para microsegmentação.</aside>
       </section>
 
       <!-- ==================================================================
@@ -870,6 +898,7 @@
             </svg>
           </div>
         </div>
+        <aside class="notes">⏱ 11h10–11h20. IAP: VM sem IP público; o túnel chega por TLS 443 até o IAP, que entra na VPC a partir de 35.235.240.0/20 na porta 22. É por isso que a regra libera só esse bloco.</aside>
       </section>
 
       <!-- ==================================================================
@@ -889,7 +918,7 @@
             <div class="card card-live" style="flex: 1;">
               <div class="card-title"><span class="icon-badge green">02</span> Passo a Passo do Lab 02</div>
               <div class="flex-col" style="gap: 8px;">
-                <div class="step-item"><span class="step-num">1</span><div>Criar <code class="inline-code">firewall.tf</code> liberando <code class="inline-code">tcp:22</code> para <code class="inline-code">35.235.240.0/20</code> (tag <code class="inline-code">ssh-iap</code>) e <code class="inline-code">icmp</code> para <code class="inline-code">10.0.0.0/8</code>.</div></div>
+                <div class="step-item"><span class="step-num">1</span><div>Criar <code class="inline-code">firewall.tf</code> liberando <code class="inline-code">tcp:22</code> para <code class="inline-code">35.235.240.0/20</code> (tag <code class="inline-code">ssh-iap</code>) e <code class="inline-code">icmp</code> só da própria sub-rede. Nada para o Hub: <strong>stateful</strong>!</div></div>
                 <div class="step-item"><span class="step-num">2</span><div>Criar <code class="inline-code">compute.tf</code> provisionando a VM <code class="inline-code">e2-micro</code> <strong>sem bloco <code class="inline-code">access_config</code></strong>.</div></div>
                 <div class="step-item"><span class="step-num">3</span><div>Rodar <code class="inline-code">terraform apply</code> e entrar via SSH usando o comando gerado no output!</div></div>
               </div>
@@ -909,7 +938,7 @@
             </div>
             <pre><span class="hl-kw">resource</span> <span class="hl-type">"google_compute_firewall"</span> <span class="hl-str">"allow_ssh_iap"</span> {
   <span class="hl-attr">name</span>          = <span class="hl-str">"fw-allow-ssh-iap-${local.student_suffix}"</span>
-  <span class="hl-attr">network</span>       = google_compute_network.vpc_aluno.name
+  <span class="hl-attr">network</span>       = google_compute_network.vpc_aluno.id
   <span class="hl-attr">direction</span>     = <span class="hl-str">"INGRESS"</span>
   <span class="hl-attr">source_ranges</span> = [<span class="hl-str">"35.235.240.0/20"</span>]
   <span class="hl-attr">target_tags</span>   = [<span class="hl-str">"ssh-iap"</span>]
@@ -923,7 +952,7 @@
   <span class="hl-attr">name</span>         = <span class="hl-str">"vm-teste-${local.student_suffix}"</span>
   <span class="hl-attr">machine_type</span> = <span class="hl-str">"e2-micro"</span>
   <span class="hl-attr">zone</span>         = var.zone
-  <span class="hl-attr">tags</span>         = [<span class="hl-str">"ssh-iap"</span>]
+  <span class="hl-attr">tags</span>         = [<span class="hl-str">"ssh-iap"</span>, local.student_suffix]
   <span class="hl-kw">boot_disk</span> {
     <span class="hl-kw">initialize_params</span> { <span class="hl-attr">image</span> = <span class="hl-str">"debian-cloud/debian-12"</span> }
   }
@@ -933,6 +962,21 @@
 }</pre>
           </div>
         </div>
+        <aside class="notes">⏱ 11h20–12h00. LIVE CODING Etapa 02: firewall.tf (allow_ssh_iap + allow_internal_icmp só da própria sub-rede — pergunte: precisamos abrir algo para o Hub? Não, stateful). compute.tf (vm_aluno, tags ssh-iap + aluno-XX, SEM access_config). apply, SSH pelo output, 'ip a' e 'ping -c 3 8.8.8.8' → 100% packet loss. Gancho: por quê? Resposta às 14h.</aside>
+      </section>
+
+      <!-- ==================================================================
+           INTERVALO — Almoço 🍽️ (12h00 – 14h00)
+           ================================================================== -->
+      <section class="slide slide-break">
+        <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 22px;">
+          <div class="header-brand" style="justify-content: center;"><img src="../assets/logo-einfo.png" alt="e-info 2026" class="logo-einfo" /><span class="brand-divider"></span><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+          <span class="pill pill-live">12h00 – 14h00</span>
+          <h2 style="font-family: var(--font-display); font-size: 64px; font-weight: 700; letter-spacing: -0.02em;">Almoço 🍽️</h2>
+          <p style="font-size: 20px; color: var(--text-secondary); max-width: 900px;">Deixe sua VM ligada: o mistério do <code class="inline-code">100% packet loss</code> será resolvido na volta.</p>
+          <div class="card card-elevated" style="padding: 14px 24px; font-family: var(--font-mono); color: #6EE7B7; font-size: 16px;">Na volta: Etapa 03 — Tabela de Rotas e Cloud NAT (14h00)</div>
+        </div>
+        <aside class="notes">⏱ 12h00–14h00. Almoço. Lembre a turma de NÃO destruir a infraestrutura: a tarde continua sobre o mesmo state.</aside>
       </section>
 
       <!-- Rodapé de Navegação (Sem botão de notas na projeção) -->
