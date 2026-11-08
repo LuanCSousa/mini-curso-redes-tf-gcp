@@ -4,7 +4,7 @@
 
 resource "google_compute_firewall" "allow_ssh_iap" {
   name          = "fw-allow-ssh-iap-${local.student_suffix}"
-  description   = "Permite SSH (TCP 22) exclusivamente a partir do bloco do Google Cloud IAP para VMs com a tag ssh-iap"
+  description   = "Permite SSH (TCP 22) exclusivamente a partir do bloco oficial do Google Cloud IAP"
   network       = google_compute_network.vpc_aluno.id
   direction     = "INGRESS"
   priority      = 1000
@@ -17,25 +17,16 @@ resource "google_compute_firewall" "allow_ssh_iap" {
   }
 }
 
+# Firewall stateful: as respostas do Hub/Internet voltam sem regra extra de ingress.
 resource "google_compute_firewall" "allow_internal_icmp" {
-  name        = "fw-allow-internal-icmp-${local.student_suffix}"
-  description = "Permite ping (ICMP) e HTTP entre a sub-rede do aluno e as VPCs do Hub Central"
-  network     = google_compute_network.vpc_aluno.id
-  direction   = "INGRESS"
-  priority    = 1000
-
-  source_ranges = [
-    local.subnet_cidr,
-    "10.0.1.0/24",
-    "10.0.2.0/24"
-  ]
+  name          = "fw-allow-internal-icmp-${local.student_suffix}"
+  description   = "Permite ping (ICMP) iniciado de dentro da propria sub-rede"
+  network       = google_compute_network.vpc_aluno.id
+  direction     = "INGRESS"
+  priority      = 1000
+  source_ranges = [local.subnet_cidr]
 
   allow {
     protocol = "icmp"
-  }
-
-  allow {
-    protocol = "tcp"
-    ports    = ["80", "8080"]
   }
 }

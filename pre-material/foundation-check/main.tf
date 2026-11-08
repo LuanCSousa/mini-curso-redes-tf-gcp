@@ -16,15 +16,15 @@ data "google_compute_zones" "zonas_disponiveis" {
 # Nota: Este recurso tem custo ZERO (US$ 0.00) na fatura do Google Cloud.
 resource "terraform_data" "comprovante_foundation" {
   input = {
-    student_id        = var.student_id
-    student_code      = local.student_suffix
-    student_name      = var.student_name
-    project_id        = var.project_id
-    region            = var.region
-    detected_zones    = data.google_compute_zones.zonas_disponiveis.names
-    planned_vpc_name  = local.vpc_name
-    planned_cidr      = local.subnet_cidr
-    assigned_hub_vpc  = local.hub_vpc_name
-    assigned_hub_ip   = local.hub_target_ip
+    student_id       = var.student_id
+    student_code     = local.student_suffix
+    student_name     = var.student_name
+    project_id       = var.project_id
+    region           = var.region
+    detected_zones   = data.google_compute_zones.zonas_disponiveis.names
+    planned_vpc_name = local.vpc_name
+    planned_cidr     = local.subnet_cidr
+    assigned_hub_vpc = local.hub_vpc_name
+    assigned_hub_ip  = local.hub_target_ip
   }
 }

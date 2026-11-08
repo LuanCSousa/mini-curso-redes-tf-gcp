@@ -19,8 +19,8 @@ locals {
   # Divisão automática das VPCs do Hub para respeitar o limite de 25 Peerings/VPC do GCP:
   # - Alunos 01 a 20 conectam na vpc-hub-turma-a (10.0.1.0/24 -> VM Alvo: 10.0.1.10)
   # - Alunos 21 a 40 conectam na vpc-hub-turma-b (10.0.2.0/24 -> VM Alvo: 10.0.2.10)
-  is_turma_a     = var.student_id <= 20
-  hub_vpc_name   = local.is_turma_a ? "vpc-hub-turma-a" : "vpc-hub-turma-b"
-  hub_subnet     = local.is_turma_a ? "10.0.1.0/24" : "10.0.2.0/24"
-  hub_target_ip  = local.is_turma_a ? "10.0.1.10" : "10.0.2.10"
+  is_turma_a    = var.student_id <= 20
+  hub_vpc_name  = local.is_turma_a ? "vpc-hub-turma-a" : "vpc-hub-turma-b"
+  hub_subnet    = local.is_turma_a ? "10.0.1.0/24" : "10.0.2.0/24"
+  hub_target_ip = local.is_turma_a ? "10.0.1.10" : "10.0.2.10"
 }

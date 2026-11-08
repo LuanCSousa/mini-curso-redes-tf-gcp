@@ -16,7 +16,7 @@ cd terraform/live-coding
 # 1. versions.tf, providers.tf, variables.tf e terraform.tfvars (Etapa 00)
 # 2. locals.tf, vpc.tf e outputs.tf                             (Etapa 01)
 # 3. firewall.tf e compute.tf                                   (Etapa 02)
-# 4. nat.tf                                                     (Etapa 03)
+# 4. routes.tf e nat.tf                                         (Etapa 03)
 # 5. peering.tf                                                 (Etapa 04)
 ```
 
@@ -39,3 +39,7 @@ cp ../labs/03-roteamento-nat/*.tf .
 # Sincronizar com o final da Etapa 04 (VPC Network Peering com o Hub Central)
 cp ../labs/04-vpc-peering-hub/*.tf .
 ```
+
+> **Por que dá para copiar por cima?** Todos os labs usam os **mesmos endereços de recurso** (`google_compute_network.vpc_aluno`, `google_compute_instance.vm_aluno`...). Assim, o `terraform.tfstate` desta pasta continua válido e o `plan` mostra só o que falta criar.
+>
+> A Etapa 05 (módulos) é demonstrada em [`../labs/05-boas-praticas-modules/`](../labs/05-boas-praticas-modules/README.md), inclusive como migrar o state desta pasta para módulos com blocos `moved` **sem recriar nada**.

@@ -36,3 +36,8 @@ output "ssh_iap_command" {
   description = "Comando pronto para conectar via SSH na VM privada usando o túnel Cloud IAP."
   value       = "gcloud compute ssh ${google_compute_instance.vm_aluno.name} --zone=${var.zone} --project=${var.project_id} --tunnel-through-iap"
 }
+
+output "routes_list_command" {
+  description = "Comando para inspecionar a tabela de rotas da sua VPC (rotas de sub-rede, padrão e a explícita)."
+  value       = "gcloud compute routes list --project=${var.project_id} --filter=\"network~${google_compute_network.vpc_aluno.name}\""
+}

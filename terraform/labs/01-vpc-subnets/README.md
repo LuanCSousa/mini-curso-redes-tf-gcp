@@ -1,6 +1,6 @@
 # Etapa 01 — VPC Customizada Global, Sub-rede Regional e CIDR (`01-vpc-subnets`)
 
-> **Horário no Cronograma:** Turno da Manhã (`10h20 – 11h00` | 40 min)  
+> **Horário no Cronograma:** Turno da Manhã (`10h10 – 11h00` | 50 min)  
 > **Modo de Ensino:** *Live Coding* do zero em `terraform/live-coding/` (este diretório serve como **Roteiro do Facilitador** e **Checkpoint/Gabarito** para os alunos).
 
 ---

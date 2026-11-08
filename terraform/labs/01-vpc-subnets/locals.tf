@@ -19,9 +19,9 @@ locals {
 
   # Labels (etiquetas) padrão para organização e governança de custos (FinOps)
   common_labels = {
-    evento      = "e-info-facape"
-    minicurso   = "redes-tf-gcp"
+    evento       = "e-info-facape"
+    minicurso    = "redes-tf-gcp"
     participante = local.student_suffix
-    gerenciado  = "terraform"
+    gerenciado   = "terraform"
   }
 }

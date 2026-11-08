@@ -1,6 +1,6 @@
 # Etapa 04 — Interconexão Privada Hub-and-Spoke com VPC Peering (`04-vpc-peering-hub`)
 
-> **Horário no Cronograma:** Turno da Tarde (`15h00 – 16h05` e Desafio do Mural `16h25 – 16h40`)  
+> **Horário no Cronograma:** Turno da Tarde (`15h00 – 16h05` | 65 min, com o Desafio do Mural em `15h45 – 16h05`)  
 > **Modo de Ensino:** *Live Coding* evolutivo em `terraform/live-coding/` (adicionando `peering.tf` e testando a conectividade privada ponta a ponta com o Hub Central do Facilitador).
 
 ---
@@ -12,7 +12,8 @@
    - **Proibição de CIDR Overlap:** Colhendo os frutos do nosso planejamento `10.<student_id>.0.0/24` (Spokes) vs. `10.0.1.0/24` e `10.0.2.0/24` (Hubs).
    - **Acordo Bilateral:** Visualizar o estado mudando de `INACTIVE` para `ACTIVE` assim que o Hub Central aceita o Peering.
    - **Não-Transitividade:** Entender por que os alunos enxergam o Hub, mas continuam 100% isolados entre si.
-3. **VPC Sharding para Escala (Cota de 25 Peerings/VPC do GCP):** Demonstrar com expressão condicional ternária (`var.student_id <= 20 ? "vpc-hub-turma-a" : "vpc-hub-turma-b"`) como arquitetar redes que escalam acima do limite de 25 peerings por VPC.
+3. **Firewall Stateful na Prática:** Repare que **não criamos nenhuma regra de firewall nova** para falar com o Hub! O tráfego é iniciado pela nossa VM (egress já é permitido) e as respostas voltam automaticamente porque o firewall do GCP rastreia o estado da conexão. Quem precisa liberar *ingress* é o lado que **recebe** a conexão — o Hub (`fw-vpc-hub-turma-*-allow-students`).
+4. **VPC Sharding para Escala (Cota de 25 Peerings/VPC do GCP):** Demonstrar com expressão condicional ternária (`var.student_id <= 20 ? "vpc-hub-turma-a" : "vpc-hub-turma-b"`) como arquitetar redes que escalam acima do limite de 25 peerings por VPC.
 
 ---
 
@@ -26,7 +27,7 @@
 Criamos o arquivo [`peering.tf`](./peering.tf) com o recurso `google_compute_network_peering.peering_aluno_para_hub`.
 
 ### Passo 3: Atualizar `outputs.tf`
-Adicionamos `peering_name`, `peering_state`, `hub_conectado` e `comando_checkin_mural` em [`outputs.tf`](./outputs.tf).
+Adicionamos `peering_name`, `peering_state`, `hub_conectado`, `peering_routes_command` e `comando_checkin_mural` em [`outputs.tf`](./outputs.tf).
 
 ---
 
@@ -44,8 +45,9 @@ terraform apply
 terraform apply -refresh-only
 # Verifique que `peering_state = "ACTIVE"`!
 
-# 3. Confira a nova rota privada importada automaticamente do Hub Central:
-gcloud compute routes list --filter="network~vpc-redes-tf-aluno"
+# 3. Confira a rota privada do Hub (ex: 10.0.1.0/24) importada via Peering:
+$(terraform output -raw peering_routes_command)
+# (No Console: VPC network > Routes > aba "Effective routes")
 ```
 
 ### Desafio do Mural ao Vivo (Dentro da sua VM Privada via SSH IAP):
@@ -64,7 +66,7 @@ curl -s -X POST http://10.0.1.10/checkin \
   -d '{"student_id": 7, "nome": "Seu Nome", "subnet": "10.7.0.0/24"}'
 ```
 
-Seu cartão com Nome, ID, Sub-rede `10.<ID>.0.0/24` e IP de origem real `10.<ID>.0.2` acenderá em verde ao vivo no telão da sala!
+Seu cartão acenderá em verde ao vivo no telão da sala! O coletor **identifica você pelo IP privado real de origem do pacote** (`10.<ID>.0.x`): o `student_id` e a sub-rede são derivados do IP, e do JSON só é usado o `nome`. Por isso o check-in só funciona de dentro da sua VM, atravessando o Peering. De qualquer outra origem, a resposta é `403`.
 
 ---
 

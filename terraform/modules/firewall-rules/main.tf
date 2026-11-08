@@ -19,10 +19,11 @@ resource "google_compute_firewall" "allow_ssh_iap" {
   }
 }
 
+# Firewall stateful: respostas de conexões iniciadas pela VM voltam sem regra extra.
 resource "google_compute_firewall" "allow_internal_icmp" {
   project       = var.project_id
   name          = "fw-allow-internal-icmp-${var.name_suffix}"
-  description   = "Permite ping (ICMP) e HTTP interno entre a sub-rede local e os CIDRs internos autorizados"
+  description   = "Permite ping (ICMP) iniciado de dentro da propria sub-rede"
   network       = var.vpc_id
   direction     = "INGRESS"
   priority      = 1000
@@ -30,10 +31,5 @@ resource "google_compute_firewall" "allow_internal_icmp" {
 
   allow {
     protocol = "icmp"
-  }
-
-  allow {
-    protocol = "tcp"
-    ports    = ["80", "8080"]
   }
 }

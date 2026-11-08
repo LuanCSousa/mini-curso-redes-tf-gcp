@@ -1,0 +1,14 @@
+# ==============================================================================
+# Ambiente: dev (labs/05-boas-praticas-modules/envs/dev.tfvars.example)
+# ==============================================================================
+# Mesmo código, parâmetros diferentes por ambiente. Em empresas, cada ambiente
+# costuma ter seu PRÓPRIO projeto GCP e seu PRÓPRIO state (backend/workspace):
+#   terraform workspace new dev
+#   terraform plan -var-file=envs/dev.tfvars
+# (copie para envs/dev.tfvars antes — arquivos .tfvars não são versionados)
+
+project_id     = "minha-empresa-redes-dev"
+student_id     = 1 # aqui funciona como "ID do ambiente": define o CIDR 10.1.0.0/24
+hub_project_id = "minha-empresa-hub-central"
+region         = "us-central1"
+zone           = "us-central1-a"

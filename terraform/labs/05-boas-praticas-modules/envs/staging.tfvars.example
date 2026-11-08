@@ -1,0 +1,14 @@
+# ==============================================================================
+# Ambiente: staging (labs/05-boas-praticas-modules/envs/staging.tfvars.example)
+# ==============================================================================
+# Mesmo código, parâmetros diferentes por ambiente. Em empresas, cada ambiente
+# costuma ter seu PRÓPRIO projeto GCP e seu PRÓPRIO state (backend/workspace):
+#   terraform workspace new staging
+#   terraform plan -var-file=envs/staging.tfvars
+# (copie para envs/staging.tfvars antes — arquivos .tfvars não são versionados)
+
+project_id     = "minha-empresa-redes-staging"
+student_id     = 2 # aqui funciona como "ID do ambiente": define o CIDR 10.2.0.0/24
+hub_project_id = "minha-empresa-hub-central"
+region         = "us-central1"
+zone           = "us-central1-a"

@@ -5,6 +5,10 @@
 # Compare este arquivo enxuto e expressivo com os múltiplos recursos soltos que
 # escrevemos nas Etapas 01 a 04. Aqui cada módulo tem responsabilidade única e
 # se conecta aos demais por meio de contratos claros (variables -> outputs).
+#
+# Os nomes e descrições são IDÊNTICOS aos do live-coding (Etapa 04). Junto com o
+# arquivo moved.tf, isso permite migrar a infraestrutura já criada para módulos
+# SEM destruir nada (veja o README desta etapa).
 
 # ------------------------------------------------------------------------------
 # 1. Módulo de Rede Base (VPC Custom + Sub-rede Regional + Cloud Router + NAT)
@@ -12,14 +16,17 @@
 module "vpc" {
   source = "../../modules/vpc-network"
 
-  project_id       = var.project_id
-  vpc_name         = local.vpc_name
-  region           = var.region
-  subnet_name      = local.subnet_name
-  subnet_cidr      = local.subnet_cidr
-  enable_cloud_nat = true
-  router_name      = "router-${var.region}-${local.student_suffix}"
-  nat_name         = "nat-${var.region}-${local.student_suffix}"
+  project_id         = var.project_id
+  vpc_name           = local.vpc_name
+  vpc_description    = "VPC customizada do participante ${local.student_suffix} - Minicurso Redes.tf (e-info FACAPE)"
+  region             = var.region
+  subnet_name        = local.subnet_name
+  subnet_description = "Sub-rede regional ${local.subnet_cidr} do participante ${local.student_suffix}"
+  subnet_cidr        = local.subnet_cidr
+  enable_cloud_nat   = true
+  router_name        = local.router_name
+  router_description = "Cloud Router regional do participante ${local.student_suffix} para orquestrar o Cloud NAT"
+  nat_name           = local.nat_name
 }
 
 # ------------------------------------------------------------------------------
@@ -34,11 +41,8 @@ module "firewall" {
   enable_iap_ssh  = true
   iap_target_tags = ["ssh-iap"]
 
-  internal_source_ranges = [
-    module.vpc.subnet_cidr,
-    "10.0.1.0/24",
-    "10.0.2.0/24"
-  ]
+  # Firewall stateful: basta a própria sub-rede; respostas do Hub voltam sozinhas.
+  internal_source_ranges = [module.vpc.subnet_cidr]
 }
 
 # ------------------------------------------------------------------------------

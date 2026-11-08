@@ -1,5 +1,5 @@
 # ==============================================================================
-# Valores Calculados / Locals (labs/04-vpc-tf-peering-hub/locals.tf)
+# Valores Calculados / Locals (labs/04-vpc-peering-hub/locals.tf)
 # ==============================================================================
 
 locals {
@@ -10,6 +10,7 @@ locals {
   vm_name     = "vm-teste-${local.student_suffix}"
   router_name = "router-${var.region}-${local.student_suffix}"
   nat_name    = "nat-${var.region}-${local.student_suffix}"
+  route_name  = "rota-internet-${local.student_suffix}"
 
   subnet_cidr = "10.${var.student_id}.0.0/24"
 

@@ -4,7 +4,12 @@
 
 variable "project_id" {
   type        = string
-  description = "ID do projeto Google Cloud atribuído à sua bancada/grupo."
+  description = "ID do projeto Google Cloud atribuído à sua bancada/grupo (ex: einfo-redes-grupo-01)."
+
+  validation {
+    condition     = length(trimspace(var.project_id)) >= 6 && var.project_id != "SEU_PROJECT_ID_AQUI"
+    error_message = "Informe um project_id válido do Google Cloud no arquivo terraform.tfvars."
+  }
 }
 
 variable "student_id" {

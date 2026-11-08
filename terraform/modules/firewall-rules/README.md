@@ -2,7 +2,9 @@
 
 Módulo reutilizável para governança de perímetro e microsegmentação no Google Cloud:
 - **Zero-Trust SSH via Cloud IAP** (`35.235.240.0/20` -> `tcp:22` restrito por `target_tags`)
-- **Tráfego Interno Controlado** (`icmp` e `tcp:80,8080` entre sub-redes autorizadas)
+- **ICMP Interno Controlado** (`icmp` apenas a partir das faixas em `internal_source_ranges`)
+
+> O firewall do GCP é *stateful*: respostas de conexões iniciadas pela VM (ex: `curl` para o Hub) voltam sem regra de ingress. Por isso não abrimos portas TCP aqui.
 
 ## Exemplo de Uso
 
@@ -13,6 +15,6 @@ module "firewall" {
   project_id             = var.project_id
   vpc_id                 = module.vpc.vpc_id
   name_suffix            = local.student_suffix
-  internal_source_ranges = [module.vpc.subnet_cidr, "10.0.1.0/24", "10.0.2.0/24"]
+  internal_source_ranges = [module.vpc.subnet_cidr]
 }
 ```

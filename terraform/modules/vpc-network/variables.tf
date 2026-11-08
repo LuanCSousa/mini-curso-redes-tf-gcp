@@ -13,7 +13,18 @@ variable "project_id" {
 
 variable "vpc_name" {
   type        = string
-  description = "Nome da VPC customizada a ser criada."
+  description = "Nome da VPC customizada a ser criada (padrão RFC 1035 do GCP: minúsculas, números e hífens)."
+
+  validation {
+    condition     = can(regex("^[a-z]([-a-z0-9]{0,61}[a-z0-9])?$", var.vpc_name))
+    error_message = "vpc_name deve começar com letra minúscula, conter apenas [a-z0-9-] e ter no máximo 63 caracteres."
+  }
+}
+
+variable "vpc_description" {
+  type        = string
+  description = "Descrição opcional da VPC. ATENÇÃO: alterar a descrição de uma VPC existente força sua recriação."
+  default     = null
 }
 
 variable "routing_mode" {
@@ -36,6 +47,17 @@ variable "region" {
 variable "subnet_name" {
   type        = string
   description = "Nome da sub-rede regional."
+
+  validation {
+    condition     = can(regex("^[a-z]([-a-z0-9]{0,61}[a-z0-9])?$", var.subnet_name))
+    error_message = "subnet_name deve começar com letra minúscula, conter apenas [a-z0-9-] e ter no máximo 63 caracteres."
+  }
+}
+
+variable "subnet_description" {
+  type        = string
+  description = "Descrição opcional da sub-rede."
+  default     = null
 }
 
 variable "subnet_cidr" {
@@ -70,4 +92,10 @@ variable "nat_name" {
   type        = string
   description = "Nome opcional para o Cloud NAT (se vazio, deriva do nome da VPC)."
   default     = ""
+}
+
+variable "router_description" {
+  type        = string
+  description = "Descrição opcional do Cloud Router."
+  default     = null
 }

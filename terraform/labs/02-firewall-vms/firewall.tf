@@ -18,7 +18,7 @@
 # ------------------------------------------------------------------------------
 resource "google_compute_firewall" "allow_ssh_iap" {
   name        = "fw-allow-ssh-iap-${local.student_suffix}"
-  description = "Permite SSH (TCP 22) exclusivamente a partir do bloco do Google Cloud IAP para VMs com a tag ssh-iap"
+  description = "Permite SSH (TCP 22) exclusivamente a partir do bloco oficial do Google Cloud IAP"
   network     = google_compute_network.vpc_aluno.id
 
   direction = "INGRESS"
@@ -38,29 +38,27 @@ resource "google_compute_firewall" "allow_ssh_iap" {
 }
 
 # ------------------------------------------------------------------------------
-# 2. Regra de Entrada: Diagnóstico Interno (ICMP / Ping e HTTP interno)
+# 2. Regra de Entrada: Diagnóstico Interno (ICMP / Ping dentro da sub-rede)
 # ------------------------------------------------------------------------------
+# Repare no que NÃO precisamos liberar:
+# - Nenhuma regra para a VM sair para a internet ou para o Hub: o EGRESS já é
+#   permitido pela regra implícita (prioridade 65535).
+# - Nenhuma regra para as RESPOSTAS voltarem: o firewall é STATEFUL. Na Etapa 04,
+#   quando nossa VM fizer `ping`/`curl` para o Hub (10.0.1.10 / 10.0.2.10), as
+#   respostas entram automaticamente porque pertencem a uma conexão que NÓS
+#   iniciamos. Princípio do menor privilégio: só abrimos o que é iniciado de fora.
 resource "google_compute_firewall" "allow_internal_icmp" {
   name        = "fw-allow-internal-icmp-${local.student_suffix}"
-  description = "Permite ping (ICMP) e HTTP entre a sub-rede do aluno e as VPCs do Hub Central"
+  description = "Permite ping (ICMP) iniciado de dentro da propria sub-rede"
   network     = google_compute_network.vpc_aluno.id
 
   direction = "INGRESS"
   priority  = 1000
 
-  # Permite tráfego vindo da própria sub-rede do aluno e das 2 sub-redes do Hub Central:
-  source_ranges = [
-    local.subnet_cidr,
-    "10.0.1.0/24", # Hub Turma A (Alunos 01 a 20)
-    "10.0.2.0/24"  # Hub Turma B (Alunos 21 a 40)
-  ]
+  # Somente a própria sub-rede do aluno (10.<ID>.0.0/24):
+  source_ranges = [local.subnet_cidr]
 
   allow {
     protocol = "icmp"
-  }
-
-  allow {
-    protocol = "tcp"
-    ports    = ["80", "8080"]
   }
 }

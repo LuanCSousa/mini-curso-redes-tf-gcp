@@ -6,7 +6,7 @@ resource "google_compute_instance" "vm_aluno" {
   name         = local.vm_name
   machine_type = "e2-micro"
   zone         = var.zone
-  description  = "VM privada conectada à rede provisionada pelo módulo vpc-network"
+  description  = "VM privada de diagnóstico de rede do participante ${local.student_suffix}"
 
   # Consome as tags padronizadas expostas pelo módulo de firewall:
   tags   = concat(module.firewall.iap_target_tags, [local.student_suffix])
