@@ -16,7 +16,7 @@ Este diretório contém toda a **Infraestrutura como Código (Terraform)** e os 
      - **`vpc-hub-turma-a` (`10.0.1.0/24`):** Recebe os Peerings dos **Alunos 01 a 20**; VM coletora `vm-coletora-turma-a` em **`10.0.1.10`**.
      - **`vpc-hub-turma-b` (`10.0.2.0/24`):** Recebe os Peerings dos **Alunos 21 a 40**; VM coletora `vm-coletora-turma-b` em **`10.0.2.10`**.
 3. **VMs Coletoras:** servidor HTTP na porta `80` que recebe `POST /checkin`. O **`student_id` é derivado do IP privado real de origem** (`10.<ID>.0.x`) — o payload só informa o `nome`. Origens fora de `10.1–40.0.0/24` recebem `403`. Cada VM também serve um mural próprio em `GET /`.
-4. **Mural no Cloud Run (opcional):** painel unificado com os 40 cards, alimentado pelas VMs coletoras (que saem via Cloud NAT do Hub). O Cloud Run **só exibe o mural**; o aceite dos peerings é feito pelo script local (seção 3).
+4. **Mural no Cloud Run (opcional, privado):** painel unificado com os 40 cards, alimentado pelas VMs coletoras (que saem via Cloud NAT do Hub). O serviço **não aceita requisições anônimas**: as VMs se autenticam com a service account `sa-vm-coletora` (papel `roles/run.invoker`, via ID token do metadata server) e o facilitador visualiza pelo proxy autenticado do `gcloud`. Assim, ninguém na internet lê ou posta cards — o único caminho para acender um card é o VPC Peering até uma VM coletora. O Cloud Run **só exibe o mural**; o aceite dos peerings é feito pelo script local (seção 3).
 
 ---
 
@@ -35,17 +35,28 @@ BILLING_ACCOUNT_ID="SEU_BILLING_ACCOUNT_ID" ./scripts/setup-projetos-grupos.sh
 ```
 
 ### Passo 2 (Opcional): Publicar o Mural Unificado no Cloud Run — ANTES do `terraform apply`
-O mural guarda os check-ins **em memória**. Por isso, fixe **exatamente 1 instância** (sem scale-to-zero e sem dividir o estado entre instâncias):
+O mural guarda os check-ins **em memória**. Por isso, fixe **exatamente 1 instância** (sem scale-to-zero e sem dividir o estado entre instâncias). E publique-o **privado** (sem acesso anônimo):
 ```bash
+gcloud services enable run.googleapis.com iam.googleapis.com cloudbuild.googleapis.com \
+  --project=einfo-redes-hub-central
+
 gcloud run deploy mural-redes-tf \
   --source=./mural-cloud-run \
   --region=us-central1 \
   --project=einfo-redes-hub-central \
-  --allow-unauthenticated \
+  --no-allow-unauthenticated \
   --min-instances=1 \
   --max-instances=1
 ```
-Copie a URL exibida (`https://mural-redes-tf-....run.app`) para `mural_cloud_run_url` no `terraform.tfvars`.
+Copie a URL exibida (`https://mural-redes-tf-....run.app`) para `mural_cloud_run_url` no `terraform.tfvars`. No Passo 3, o Terraform cria a service account `sa-vm-coletora`, anexa às VMs coletoras e concede a ela `roles/run.invoker` **somente** neste serviço ([`mural.tf`](./mural.tf)).
+
+#### Abrindo o Mural no projetor (com a sua conta Google)
+No computador ligado ao projetor, autenticado com `gcloud auth login` (conta Owner do projeto do Hub, que já tem `run.invoker`):
+```bash
+$(terraform output -raw mural_proxy_cmd)
+# = gcloud run services proxy mural-redes-tf --region=us-central1 --project=einfo-redes-hub-central --port=8080
+```
+Abra **http://localhost:8080** no navegador e coloque em tela cheia. O proxy injeta o seu token em cada requisição; feche-o com `Ctrl+C` ao final.
 
 > Se não quiser usar Cloud Run, pule este passo: cada VM coletora já serve seu próprio mural na porta 80 (veja os outputs `tunnel_mural_turma_a_cmd` / `tunnel_mural_turma_b_cmd`).
 
@@ -64,7 +75,7 @@ Use um `student_id` de teste (ex: `40`, num projeto de grupo) e rode o fluxo com
 1. `terraform apply` em `terraform/labs/04-vpc-peering-hub/` com o `student_id` de teste.
 2. `./scripts/auto-accept-peerings.sh` → peering `ACTIVE` dos dois lados.
 3. SSH via IAP na VM de teste → `ping -c 3 10.0.2.10` e o `curl` do output `comando_checkin_mural`.
-4. Card aparece no mural (VM coletora e Cloud Run).
+4. Card aparece no mural (VM coletora e Cloud Run via `mural_proxy_cmd`). Confirme também que o mural está **privado**: `curl -s -o /dev/null -w '%{http_code}' https://mural-redes-tf-....run.app/` deve retornar `403`.
 5. `terraform destroy` do aluno de teste.
 
 ---

@@ -26,11 +26,17 @@ variable "mural_cloud_run_url" {
   default     = ""
 }
 
+variable "mural_service_name" {
+  type        = string
+  description = "Nome do serviço Cloud Run do Mural (usado na permissão run.invoker das VMs coletoras)."
+  default     = "mural-redes-tf"
+}
+
 variable "active_student_peerings" {
   type = map(object({
     student_id         = number
     student_project_id = string
   }))
-  description = "Mapa opcional de alunos para fechamento declarativo de VPC Peering via Terraform (pode ficar vazio se usar o auto-accept script/Cloud Run)."
+  description = "Mapa opcional de alunos para fechamento declarativo de VPC Peering via Terraform (deixe vazio se usar o script auto-accept-peerings.sh)."
   default     = {}
 }

@@ -7,7 +7,7 @@ Este documento é o **guia de palco e condução técnica** de **Luan Sousa** pa
 ## Checklist da Véspera (obrigatório)
 
 - [ ] **Projetos dos grupos e IAM:** `scripts/setup-projetos-grupos.sh` executado com `scripts/students.csv` preenchido (projetos `einfo-redes-grupo-01..10`, VPC `default` removida, OS Login ativo e papéis dos alunos concedidos).
-- [ ] **Hub Central de pé (`terraform/hub-facilitador/`):** Cloud Run do mural publicado com `--min-instances=1 --max-instances=1` **antes** do `terraform apply` (URL em `mural_cloud_run_url`).
+- [ ] **Hub Central de pé (`terraform/hub-facilitador/`):** Cloud Run do mural publicado **privado** (`--no-allow-unauthenticated`) com `--min-instances=1 --max-instances=1` **antes** do `terraform apply` (URL em `mural_cloud_run_url`). Um `curl` anônimo na URL deve retornar `403`.
 - [ ] **Ensaio ponta a ponta com um `student_id` de teste** (ex: `40`): `terraform apply` do lab 04 → `auto-accept-peerings.sh` → peering `ACTIVE` → SSH IAP → `ping 10.0.2.10` → `curl` de check-in → card no mural → `terraform destroy`.
 - [ ] **Slides:** abrir `slides/index.html` offline (fontes locais) e conferir as notas do apresentador (tecla `N`).
 
@@ -16,7 +16,7 @@ Este documento é o **guia de palco e condução técnica** de **Luan Sousa** pa
 - [ ] **Projeto Central (Hub):**
   - Confirmar que `vpc-hub-turma-a` (`10.0.1.0/24`) e `vpc-hub-turma-b` (`10.0.2.0/24`) estão ativas.
   - Confirmar que as VMs coletoras `e2-micro` (`10.0.1.10` e `10.0.2.10`) estão rodando (`systemctl status redes-tf-collector` via SSH IAP).
-  - Abrir o **Mural do Cloud Run** em uma aba dedicada do navegador no computador do projetor.
+  - No computador do projetor, rodar `$(terraform output -raw mural_proxy_cmd)` em `terraform/hub-facilitador/` e abrir o **Mural** em `http://localhost:8080` numa aba dedicada.
 - [ ] **Lista de `student_id` (`01` a `40`) e projetos de grupo:**
   - Deixar visível a tabela `student_id` → `project_id` (`einfo-redes-grupo-XX`, grupo = `ceil(ID/4)`), evitando que dois alunos usem o mesmo número.
 - [ ] **Ambiente de Live Coding limpo:**

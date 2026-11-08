@@ -29,3 +29,8 @@ output "tunnel_mural_turma_b_cmd" {
   description = "Comando para abrir o painel local da VM Coletora Turma B no navegador do Facilitador via IAP."
   value       = "gcloud compute start-iap-tunnel vm-coletora-turma-b 80 --local-host-port=localhost:8082 --zone=${var.zone} --project=${var.hub_project_id}"
 }
+
+output "mural_proxy_cmd" {
+  description = "Abre o Mural do Cloud Run (privado) em http://localhost:8080 autenticando com a sua conta gcloud. Use no computador ligado ao projetor."
+  value       = "gcloud run services proxy ${var.mural_service_name} --region=${var.region} --project=${var.hub_project_id} --port=8080"
+}

@@ -6,6 +6,10 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 PORT = int(os.environ.get("PORT", "8080"))
 
+# Serviço PRIVADO: publique com --no-allow-unauthenticated. O Cloud Run só entrega
+# as requisições autenticadas (VMs coletoras com run.invoker e o facilitador via
+# `gcloud run services proxy`), então este código não precisa validar origem.
+#
 # ATENÇÃO: estado em memória. Faça o deploy com --min-instances=1 --max-instances=1
 # para que os cards não sumam (scale-to-zero) nem se dividam entre instâncias.
 CHECKINS = {}

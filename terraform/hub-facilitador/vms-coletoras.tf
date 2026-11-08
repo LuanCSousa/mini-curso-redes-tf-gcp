@@ -41,6 +41,13 @@ resource "google_compute_instance" "vm_coletora" {
 
   allow_stopping_for_update = true
 
+  # Identidade da VM: usada SOMENTE para obter um ID token e chamar o Mural no
+  # Cloud Run (que não aceita requisições anônimas). Único papel: run.invoker.
+  service_account {
+    email  = google_service_account.coletora.email
+    scopes = ["cloud-platform"]
+  }
+
   metadata_startup_script = <<-EOF
     #!/bin/bash
     set -e
@@ -50,6 +57,7 @@ resource "google_compute_instance" "vm_coletora" {
     import html
     import json
     import os
+    import urllib.parse
     import urllib.request
     from datetime import datetime, timezone, timedelta
     from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -57,7 +65,15 @@ resource "google_compute_instance" "vm_coletora" {
     DATA_FILE = "/var/lib/redes-tf/checkins.json"
     HUB_NAME = "${each.value.vpc_name}"
     COLLECTOR_IP = "${each.value.collector_ip}"
-    MURAL_URL = "${var.mural_cloud_run_url}"
+    MURAL_URL = "${var.mural_cloud_run_url}".rstrip("/")
+    METADATA_TOKEN_URL = "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity?audience="
+
+    def mural_id_token():
+        # ID token (OIDC) da service account da VM, emitido pelo metadata server.
+        # O Cloud Run valida o token e a permissão run.invoker antes de aceitar o POST.
+        req = urllib.request.Request(METADATA_TOKEN_URL + urllib.parse.quote(MURAL_URL, safe=""), headers={"Metadata-Flavor": "Google"})
+        with urllib.request.urlopen(req, timeout=3) as resp:
+            return resp.read().decode("utf-8")
 
     def load_checkins():
         if not os.path.exists(DATA_FILE):
@@ -175,9 +191,9 @@ resource "google_compute_instance" "vm_coletora" {
             if MURAL_URL:
                 try:
                     req = urllib.request.Request(
-                        MURAL_URL.rstrip("/") + "/api/checkin",
+                        MURAL_URL + "/api/checkin",
                         data=json.dumps(record).encode("utf-8"),
-                        headers={"Content-Type": "application/json"},
+                        headers={"Content-Type": "application/json", "Authorization": "Bearer " + mural_id_token()},
                         method="POST"
                     )
                     urllib.request.urlopen(req, timeout=3)
