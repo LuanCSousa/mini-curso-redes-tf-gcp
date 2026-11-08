@@ -1,6 +1,6 @@
 Redes.tf: da Teoria à Prática com Terraform e GCP — Ficha do Minicurso 
 
-Redes.tf: daTeoria à Prática com Terraform e GCP 
+Redes.tf: da Teoria à Prática com Terraform e GCP 
 
 Ficha executiva do minicurso — e-info 
 
@@ -16,9 +16,9 @@ Facilitador
 
 Ementa 
 
-Um mergulho prático de 8 horas nos fundamentos de Infraestrutura de Redes, saindo da teoria de sala de aula direto para a nuvem. Usando o Google Cloud Platform e as boas práticas do Terraform, o curso conecta conceitos clássicos de redes (sub-redes, roteamento, firewalls, NAT, VPNs) com sua aplicação real em ambientes cloud modernos. 
+Um mergulho prático de 8 horas nos fundamentos de Infraestrutura de Redes, saindo da teoria de sala de aula direto para a nuvem. Usando o Google Cloud Platform e as boas práticas do Terraform, o curso conecta conceitos clássicos de redes (sub-redes, CIDR, roteamento, firewalls, NAT e interconexão privada via VPC Peering — com um comparativo com VPN, Shared VPC e PSC) com sua aplicação real em ambientes cloud modernos. 
 
-Ao final, o participante terá construído e versionado, como código, uma infraestrutura de rede completa, entendendo o porquê de cada componente e não apenas como configurá lo. 
+Ao final, o participante terá construído e versionado, como código, uma infraestrutura de rede completa, entendendo o porquê de cada componente e não apenas como configurá-lo. 
 
 Pré-requisitos para os participantes 
 
@@ -29,7 +29,7 @@ Familiaridade básica com o terminal (linha de comando) é desejável. Conta Goo
 Page 1 of 2  
 Redes.tf: da Teoria à Prática com Terraform e GCP — Ficha do Minicurso 
 
-**Pré-material:** antes do curso, cada participante receberá um material de preparação para montar o *foundation* inicial do seu próprio projeto GCP, incluindo conceitos como VPC peering. Os projetos serão individuais e, durante o curso, integrados a um projeto central mantido pelo facilitador. A conclusão do pré-material é necessária para acompanhar as atividades. 
+**Pré-material:** antes do curso, cada participante receberá um material de preparação para validar o seu ambiente (*foundation*) no projeto GCP do seu grupo, incluindo conceitos como VPC peering. Os participantes são organizados em projetos de grupo (até 4 por projeto), onde cada um constrói a sua própria rede isolada; durante o curso, todas as redes são integradas a um projeto central mantido pelo facilitador. A conclusão do pré-material é necessária para acompanhar as atividades. 
 
 Requisitos nos computadores 
 
@@ -53,6 +53,6 @@ Solicitações à equipe técnica dos laboratórios
 
 Pré-instalar as ferramentas listadas acima nas máquinas, com antecedência ao dia do curso. 
 
-Garantir acesso à internet, com saída liberada para os domínios do Google Cloud (googleapis.com e console.cloud.google.com), para o registro e os downloads do Terraform (registry.terraform.io e releases.hashicorp.com) e para o GitHub. Garantir saída pela porta 22 (SSH) na rede dos laboratórios. 
+Garantir acesso à internet com saída HTTPS (porta 443) liberada para os domínios do Google Cloud (*.googleapis.com, console.cloud.google.com, accounts.google.com e tunnel.cloudproxy.app — este último usado pelo SSH via Cloud IAP), para o registro e os downloads do Terraform (registry.terraform.io e releases.hashicorp.com) e para o GitHub (github.com). Não é necessário liberar a porta 22: o acesso SSH às VMs é feito por túnel HTTPS do Cloud IAP. 
 
 Permitir o login em contas Google pessoais nos navegadores das máquinas. Page 2 of 2

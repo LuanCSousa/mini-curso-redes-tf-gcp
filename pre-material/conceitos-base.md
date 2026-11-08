@@ -26,8 +26,8 @@ Cada máquina virtual (VM) precisa de um endereço IP privado para conversar na 
 > **Por que cada aluno usa `10.<student_id>.0.0/24` no minicurso?**  
 > Quando duas redes diferentes precisam se conectar (via **VPC Peering** ou **VPN**), elas **nunca podem usar a mesma faixa de IPs** (caso contrário, o roteador não saberia para qual rede enviar o pacote!).  
 > Ao usar seu `student_id` no segundo octeto:
-> - **Aluno 01** usa `10.1.0.0/24` (IPs `10.1.0.1` até `10.1.0.254`)
-> - **Aluno 07** usa `10.7.0.0/24` (IPs `10.7.0.1` até `10.7.0.254`)
+> - **Aluno 01** usa `10.1.0.0/24` (endereços `10.1.0.0` a `10.1.0.255`; no GCP, as VMs usam `.2` a `.253`)
+> - **Aluno 07** usa `10.7.0.0/24` (endereços `10.7.0.0` a `10.7.0.255`; no GCP, as VMs usam `.2` a `.253`)
 > - **Hub Central do Facilitador** usa `10.0.1.0/24` e `10.0.2.0/24`  
 > Assim, **todas as redes da sala podem se conectar ao mesmo tempo sem nenhum conflito!**
 

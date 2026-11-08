@@ -31,14 +31,14 @@
 
 ## Passo 1 — Consulte seu `student_id` e seu `project_id`
 
-Você **não precisa de cartão de crédito** nem criar conta de faturamento. O acesso ao projeto do curso no Google Cloud é liberado pelo facilitador diretamente para o seu e-mail Google (`@gmail.com` ou institucional).
+Você **não precisa de cartão de crédito** nem criar conta de faturamento. O acesso ao projeto do curso no Google Cloud é liberado pelo facilitador diretamente para o **e-mail Google informado na inscrição** (`@gmail.com` ou institucional) — use exatamente essa conta nos passos abaixo.
 
 Na lista oficial da turma enviada pelo facilitador, anote **2 informações essenciais**:
 
 | Parâmetro | O que é? | Exemplo |
 | :--- | :--- | :--- |
 | **`student_id`** | Seu número único na turma (de `1` a `40`). Ele define seu bloco de IP exclusivo (`10.<ID>.0.0/24`) para evitar conflito de IPs no momento do **VPC Peering** com o Projeto Central! | `7` *(Aluno 07 -> Sub-rede `10.7.0.0/24`)* |
-| **`project_id`** | O ID do projeto GCP atribuído à sua bancada/grupo (onde até 4 alunos trabalham de forma isolada usando seus respectivos sufixos `aluno-XX`). | `einfo-redes-grupo-02` |
+| **`project_id`** | O ID do projeto GCP atribuído à sua bancada/grupo (onde até 4 alunos trabalham de forma isolada usando seus respectivos sufixos `aluno-XX`). Regra: grupo = `ceil(student_id / 4)` (alunos 01–04 → grupo 01, 05–08 → grupo 02, ...). | `einfo-redes-grupo-02` *(Aluno 07)* |
 
 ---
 
@@ -97,7 +97,7 @@ Com o terminal aberto (seja na sua máquina ou no Cloud Shell), clone este repos
 
 ### 3.1. Clonar o repositório do minicurso
 ```bash
-git clone https://github.com/SEU_USUARIO/mini-curso-redes-tf-gcp.git
+git clone https://github.com/LuanCSousa/mini-curso-redes-tf-gcp.git
 cd mini-curso-redes-tf-gcp
 ```
 
@@ -140,7 +140,7 @@ cp terraform.tfvars.example terraform.tfvars
 
 Abra o arquivo `terraform.tfvars` no VS Code (ou com `nano terraform.tfvars`) e preencha:
 ```hcl
-project_id   = "einfo-redes-grupo-01" # Seu Project ID recebido
+project_id   = "einfo-redes-grupo-02" # Seu Project ID recebido (Aluno 07 -> grupo 02)
 student_id   = 7                      # Seu número único (1 a 40)
 student_name = "Seu Nome Completo"    # Seu nome para identificação
 ```
@@ -171,11 +171,12 @@ cartao_foundation_aluno = <<EOT
   FOUNDATION VALIDADO COM SUCESSO — REDES.TF (e-info / FACAPE)
 ====================================================================
   Participante      : Seu Nome Completo (aluno-07)
-  Projeto GCP Ativo : einfo-redes-grupo-01
+  Projeto GCP Ativo : einfo-redes-grupo-02
   Região Padrão     : us-central1 (Zonas ativas detectadas: 4)
 --------------------------------------------------------------------
   SEU PLANO DE REDE PARA O LIVE CODING:
   • Nome da sua VPC : vpc-redes-tf-aluno-07
+  • Nome da Subnet  : subnet-us-central1-aluno-07
   • Sua Sub-rede    : 10.7.0.0/24 (Gateway: 10.7.0.1)
   • Hub de Peering  : vpc-hub-turma-a (10.0.1.0/24 -> Alvo: 10.0.1.10)
 ====================================================================

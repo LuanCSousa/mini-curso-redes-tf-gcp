@@ -42,48 +42,42 @@ Durante o curso, **construiremos toda a infraestrutura do zero ao fim (*Live Cod
 
 ## Arquitetura do Laboratório (Dinâmica *Hub-and-Spoke*)
 
-Cada participante trabalha em seu **próprio projeto GCP individual** (configurado no [Pré-material](./pre-material/README.md)) e constrói sua VPC do zero. Na etapa de interconexão, todas as redes dos alunos são integradas a um **Projeto Central (Hub)** mantido pelo facilitador via **VPC Network Peering**.
+Os participantes são distribuídos em **projetos GCP de grupo** (até **4 alunos por projeto**, `einfo-redes-grupo-01` a `10`), e cada um constrói **a sua própria VPC do zero**, isolada pelo sufixo `aluno-XX`. Na etapa de interconexão, todas as redes dos alunos se conectam via **VPC Network Peering** a um **Projeto Central (Hub)** mantido pelo facilitador. Como o GCP permite no máximo **25 peerings por VPC**, o Hub é dividido em **2 VPCs** ("Turma A" e "Turma B" são apenas *shards* do Hub, e a aula é uma só):
 
 ```mermaid
 flowchart TB
-    subgraph Hub["Projeto Central (Facilitador - Hub)"]
-        VPC_HUB["vpc-hub-einfo<br/>CIDR: 10.0.0.0/24"]
-        VM_HUB["VM / Serviço Central<br/>10.0.0.10"]
-        VPC_HUB --- VM_HUB
+    subgraph Hub["Projeto Central do Facilitador (einfo-redes-hub-central)"]
+        HUB_A["vpc-hub-turma-a<br/>10.0.1.0/24<br/>VM coletora 10.0.1.10"]
+        HUB_B["vpc-hub-turma-b<br/>10.0.2.0/24<br/>VM coletora 10.0.2.10"]
+        MURAL["Cloud Run<br/>Mural ao Vivo (projetor)"]
+        HUB_A -. "check-ins (via Cloud NAT)" .-> MURAL
+        HUB_B -. "check-ins (via Cloud NAT)" .-> MURAL
     end
 
-    subgraph Spoke1["Projeto Aluno 01"]
-        VPC_S1["vpc-aluno-01<br/>CIDR: 10.1.0.0/24"]
-        NAT_S1["Cloud Router + Cloud NAT"]
-        FW_S1["Cloud Firewall Rules"]
-        VM_S1["VM Aluno 01"]
-        VPC_S1 --- VM_S1
-        VPC_S1 --- NAT_S1
-        VPC_S1 --- FW_S1
+    subgraph G1["Projeto einfo-redes-grupo-01 (alunos 01–04)"]
+        S1["vpc-redes-tf-aluno-01<br/>10.1.0.0/24"]
+        S4["vpc-redes-tf-aluno-04<br/>10.4.0.0/24"]
     end
 
-    subgraph Spoke2["Projeto Aluno 02"]
-        VPC_S2["vpc-aluno-02<br/>CIDR: 10.2.0.0/24"]
-        NAT_S2["Cloud Router + Cloud NAT"]
-        FW_S2["Cloud Firewall Rules"]
-        VM_S2["VM Aluno 02"]
-        VPC_S2 --- VM_S2
-        VPC_S2 --- NAT_S2
-        VPC_S2 --- FW_S2
+    subgraph G6["Projeto einfo-redes-grupo-06 (alunos 21–24)"]
+        S21["vpc-redes-tf-aluno-21<br/>10.21.0.0/24"]
     end
 
-    subgraph SpokeN["Projeto Aluno N"]
-        VPC_SN["vpc-aluno-N<br/>CIDR: 10.N.0.0/24"]
+    subgraph G10["Projeto einfo-redes-grupo-10 (alunos 37–40)"]
+        S40["vpc-redes-tf-aluno-40<br/>10.40.0.0/24"]
     end
 
-    VPC_S1 <== "VPC Peering" ==> VPC_HUB
-    VPC_S2 <== "VPC Peering" ==> VPC_HUB
-    VPC_SN <== "VPC Peering" ==> VPC_HUB
+    S1 <== "VPC Peering" ==> HUB_A
+    S4 <== "VPC Peering" ==> HUB_A
+    S21 <== "VPC Peering" ==> HUB_B
+    S40 <== "VPC Peering" ==> HUB_B
 ```
+
+Cada VPC de aluno contém: sub-rede regional, regras de firewall (SSH via IAP + ICMP), VM privada `e2-micro` sem IP público, rota estática explícita, Cloud Router + Cloud NAT e o peering com o Hub.
 
 > [!IMPORTANT]
 > **Convenção de Endereçamento por Aluno (`student_id`):**  
-> Para evitar conflito de faixas de IP (*CIDR overlap*) no momento do VPC Peering com o Projeto Central (`10.0.0.0/24`), cada participante receberá um **ID numérico (`01` a `99`)** e utilizará o bloco **`10.<ID>.0.0/24`** em sua sub-rede.
+> Cada participante recebe um **ID numérico de `1` a `40`** e usa o bloco **`10.<ID>.0.0/24`** na sua sub-rede (ex: Aluno `07` → `10.7.0.0/24`). Assim, nenhuma rede de aluno se sobrepõe às do Hub (`10.0.1.0/24` e `10.0.2.0/24`) nem às dos colegas (*CIDR overlap*). Alunos `01–20` fazem peering com `vpc-hub-turma-a`, e alunos `21–40` com `vpc-hub-turma-b`.
 
 ---
 
@@ -106,9 +100,9 @@ mini-curso-redes-tf-gcp/
 │   ├── labs/                        # Guia passo a passo e gabarito (checkpoints) de cada etapa:
 │   │   ├── 01-vpc-subnets/          # Etapa 01: VPC Customizada e Sub-redes
 │   │   ├── 02-firewall-vms/         # Etapa 02: Regras de Firewall, Tags e VMs de teste
-│   │   ├── 03-roteamento-nat/       # Etapa 03: Roteamento, Cloud Router e Cloud NAT
+│   │   ├── 03-roteamento-nat/       # Etapa 03: Rota explícita, Cloud Router e Cloud NAT
 │   │   ├── 04-vpc-peering-hub/      # Etapa 04: VPC Peering com o Projeto Central (Hub)
-│   │   └── 05-boas-praticas-modules/# Etapa 05: Refatorando para Módulos do Terraform
+│   │   └── 05-boas-praticas-modules/# Etapa 05: Módulos do Terraform + migração com moved {}
 │   ├── modules/                     # Módulos reutilizáveis de referência (Boas Práticas)
 │   └── hub-facilitador/             # Infraestrutura do Projeto Central mantida pelo facilitador
 └── slides/                          # Apresentações visuais do minicurso
@@ -130,7 +124,7 @@ mini-curso-redes-tf-gcp/
 - **Git**
 - **VS Code** com a extensão *HashiCorp Terraform*
 - **Cliente SSH** (nativo no Linux, macOS e Windows 10+)
-- **Conta Google (Gmail)** ativa (não é necessário cartão de crédito; o ambiente do curso utiliza créditos/estrutura fornecidos pelo facilitador).
+- **Conta Google (Gmail)** ativa, informada na inscrição (não é necessário cartão de crédito; os projetos GCP do curso são fornecidos pelo facilitador, que libera o acesso para o seu e-mail).
 
 > [!TIP]
 > **Alternativa Zero Instalação:** Caso prefira não instalar nada na sua máquina pessoal, você poderá realizar todo o minicurso utilizando o **Google Cloud Shell** diretamente pelo navegador, que já traz `terraform`, `gcloud`, `git` e editor VS Code integrados!
@@ -141,6 +135,6 @@ mini-curso-redes-tf-gcp/
 
 | Turno | Duração | Foco Principal | Etapas Práticas |
 | :--- | :---: | :--- | :--- |
-| **Pré-curso** | *Assíncrono* | Setup de ferramentas, autenticação GCP e criação do projeto individual (*Foundation*) | [`pre-material/`](./pre-material/README.md) |
+| **Pré-curso** | *Assíncrono* | Setup de ferramentas, autenticação GCP e validação do acesso ao projeto do seu grupo (*Foundation*) | [`pre-material/`](./pre-material/README.md) |
 | **Manhã** | **4h** | Fundamentos de Redes na Nuvem, Arquitetura de VPC no GCP, Introdução ao Terraform, Sub-redes, Endereçamento CIDR e Firewalls | [`01-vpc-subnets`](./terraform/labs/README.md) e [`02-firewall-vms`](./terraform/labs/README.md) |
-| **Tarde** | **4h** | Roteamento na Nuvem, Saída Segura com Cloud NAT, Interconexão com o Projeto Central via VPC Peering e Boas Práticas de Modularização (`modules/`) | [`03-roteamento-nat`](./terraform/labs/README.md), [`04-vpc-peering-hub`](./terraform/labs/README.md) e [`05-boas-praticas-modules`](./terraform/labs/README.md) |
+| **Tarde** | **4h** | Tabela de Rotas, Saída Segura com Cloud NAT, Interconexão com o Projeto Central via VPC Peering e Boas Práticas de Modularização (`modules/`) | [`03-roteamento-nat`](./terraform/labs/README.md), [`04-vpc-peering-hub`](./terraform/labs/README.md) e [`05-boas-praticas-modules`](./terraform/labs/README.md) |
