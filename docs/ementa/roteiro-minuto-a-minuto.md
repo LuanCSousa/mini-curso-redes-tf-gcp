@@ -25,6 +25,37 @@ Este documento é o **guia de palco e condução técnica** de **Luan Sousa** pa
 
 ---
 
+## Como os Alunos Aplicam o Terraform (Ciclo de Cada Etapa)
+
+Cada aluno roda o Terraform **na própria máquina ou no próprio Cloud Shell**, dentro do seu clone do repositório, em `terraform/live-coding/`. O `terraform.tfstate` é **local e individual**: os 4 alunos de um mesmo projeto de grupo não enxergam o state uns dos outros, e o sufixo `aluno-XX` + o CIDR `10.<ID>.0.0/24` evitam colisão de nomes e faixas de IP.
+
+**Uma única vez (Etapa 00):** criar `versions.tf`, `providers.tf`, `variables.tf` e `terraform.tfvars` e rodar `terraform init`.
+
+**A cada etapa (01 a 04), na mesma pasta `terraform/live-coding/`:**
+
+```bash
+terraform fmt && terraform validate
+terraform plan     # o state é cumulativo: o plano mostra só o que a etapa acrescenta
+terraform apply    # confirmar com "yes"
+```
+
+**Quem se atrasou (checkpoint):** copiar os `.tf` do lab por cima e aplicar. O `terraform.tfvars` é preservado, e o state continua válido porque todos os labs usam os mesmos endereços de recurso:
+
+```bash
+cp ../labs/03-roteamento-nat/*.tf .
+terraform plan && terraform apply
+```
+
+**No final (Bloco 8):** `terraform destroy` na mesma pasta.
+
+> **Avisos para dar em voz alta (e manter no slide):**
+> - **Use exatamente os nomes de arquivo do roteiro** (`vpc.tf`, `firewall.tf`, `compute.tf`, `routes.tf`, `nat.tf`, `peering.tf`). Se alguém criar `rede.tf` e depois copiar o checkpoint, o mesmo recurso fica declarado em dois arquivos → erro `Duplicate resource`. Solução: apagar o arquivo com nome diferente.
+> - **O `cp` não atualiza o `terraform.tfvars`.** Na Etapa 04 surgem variáveis novas que o aluno precisa adicionar à mão (ver Bloco 6).
+> - **Não apagar a pasta nem trocar de máquina no meio da aula:** sem o `terraform.tfstate`, o Terraform perde o controle dos recursos e eles ficam órfãos no projeto (rede de segurança: `scripts/cleanup-pos-evento.sh`).
+> - **Cloud Shell:** normalmente já tem credenciais; se o aluno trocar de conta, refazer `gcloud auth application-default login`.
+
+---
+
 ## TURNO DA MANHÃ (08h00 – 12h00)
 
 ### Bloco 1: Boas-vindas, Check de Ambiente e Fundamentos de Redes na Nuvem (`08h00 – 09h00`)
@@ -101,8 +132,10 @@ Este documento é o **guia de palco e condução técnica** de **Luan Sousa** pa
 | Horário | Tempo | Atividade / O que fazer no palco |
 | :---: | :---: | :--- |
 | `15h00 – 15h20` | 20m | **Slides Etapa 04:** Explicar arquitetura **Hub-and-Spoke** e **VPC Network Peering**. Destacar por que cada aluno recebeu um `student_id` (para que `10.1.0.0/24`, `10.2.0.0/24`... não conflitem entre si nem com o Hub `10.0.1.0/24` / `10.0.2.0/24`), o limite de 25 peerings por VPC (por isso 2 VPCs de Hub) e o aperto de mão bilateral (Peering no Aluno <-> Peering no Hub). **Iniciar `./scripts/auto-accept-peerings.sh` no seu terminal.** |
-| `15h20 – 15h45` | 25m | **LIVE CODING — Etapa 04 (Referência: `labs/04-vpc-peering-hub/`):**<br/>1. Adicionar as variáveis `hub_project_id` e `student_name` no `variables.tf` e, no `locals.tf`, a condicional `is_turma_a = var.student_id <= 20` que escolhe `hub_vpc_name`, `hub_target_ip` e `hub_vpc_self_link`.<br/>2. Criar `peering.tf`: declarar `resource "google_compute_network_peering" "peering_aluno_para_hub"` com `peer_network = local.hub_vpc_self_link`.<br/>3. Rodar `terraform apply`. O estado fica `INACTIVE` até o script do Hub criar o lado recíproco (≈15 s); depois `terraform apply -refresh-only` mostra `ACTIVE`. |
+| `15h20 – 15h45` | 25m | **LIVE CODING — Etapa 04 (Referência: `labs/04-vpc-peering-hub/`):**<br/>1. Adicionar as variáveis `hub_project_id` e `student_name` no `variables.tf` e, no `locals.tf`, a condicional `is_turma_a = var.student_id <= 20` que escolhe `hub_vpc_name`, `hub_target_ip` e `hub_vpc_self_link`.<br/>2. Criar `peering.tf`: declarar `resource "google_compute_network_peering" "peering_aluno_para_hub"` com `peer_network = local.hub_vpc_self_link`.<br/>3. **Atualizar o `terraform.tfvars`** (todos, inclusive quem copiou o checkpoint, pois o `cp` não mexe no tfvars) acrescentando as duas variáveis novas:<br/>`student_name   = "Seu Nome Completo"`<br/>`hub_project_id = "einfo-redes-hub-central"`<br/>Sem elas, o `plan` para pedindo os valores no prompt (ou falha a validação).<br/>4. Rodar `terraform plan` e `terraform apply`. O estado fica `INACTIVE` até o script do Hub criar o lado recíproco (≈15 s); depois `terraform apply -refresh-only` mostra `ACTIVE`. |
 | `15h45 – 16h05` | 20m | **O Momento *Aha!* — Check-in no Mural Central (Cloud Run + `10.0.1.10` / `10.0.2.10`):**<br/>1. Colocar o **Mural do Cloud Run** em tela cheia no projetor.<br/>2. Pedir para os alunos rodarem `$(terraform output -raw peering_routes_command)` (ou Console → *Routes* → *Effective routes*): a rota `10.0.1.0/24` (ou `10.0.2.0/24`) do Hub apareceu automaticamente via Peering!<br/>3. De dentro da VM privada de cada aluno (via SSH IAP), rodar:<br/>`ping -c 3 10.0.1.10` (alunos 21–40: `10.0.2.10`)<br/>e em seguida o comando de check-in copiado do output `comando_checkin_mural`:<br/>`curl -s -X POST http://10.0.1.10/checkin -H 'Content-Type: application/json' -d '{"student_id": 7, "nome": "Seu Nome", "subnet": "10.7.0.0/24"}'`<br/>(o coletor identifica o aluno pelo IP de origem; do JSON só usa o `nome`)<br/>4. Comemorar conforme os cards de cada aluno vão acendendo ao vivo no projetor! |
+
+> **Checkpoint 04:** `cp ../labs/04-vpc-peering-hub/*.tf .` **e** adicionar `student_name` e `hub_project_id` ao `terraform.tfvars` antes do `plan`.
 
 ---
 
