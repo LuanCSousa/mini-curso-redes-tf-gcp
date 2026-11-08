@@ -34,8 +34,8 @@ while true; do
   EXISTING_PEERS_A=$(gcloud compute networks peerings list --network="vpc-hub-turma-a" --project="$HUB_PROJECT_ID" --format="value(peerings.name)" 2>/dev/null | tr ';' '\n' || true)
   EXISTING_PEERS_B=$(gcloud compute networks peerings list --network="vpc-hub-turma-b" --project="$HUB_PROJECT_ID" --format="value(peerings.name)" 2>/dev/null | tr ';' '\n' || true)
 
-  for g in $(seq -w 1 "$TOTAL_GROUPS"); do
-    STUDENT_PROJECT="${PROJECT_PREFIX}-${g}"
+  for n in $(seq 1 "$TOTAL_GROUPS"); do
+    STUDENT_PROJECT="$(printf "%s-%02d" "$PROJECT_PREFIX" "$n")"
 
     # Verifica se o projeto do grupo existe
     if ! gcloud projects describe "$STUDENT_PROJECT" >/dev/null 2>&1; then

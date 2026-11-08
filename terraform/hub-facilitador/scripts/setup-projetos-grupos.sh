@@ -22,6 +22,7 @@
 set -euo pipefail
 
 BILLING_ACCOUNT_ID="${BILLING_ACCOUNT_ID:-}"
+HUB_PROJECT_ID="${HUB_PROJECT_ID:-einfo-redes-hub-central}"
 PROJECT_PREFIX="${PROJECT_PREFIX:-einfo-redes-grupo}"
 TOTAL_GROUPS="${TOTAL_GROUPS:-10}" # 10 projetos x 4 alunos = 40 alunos
 STUDENTS_CSV="${STUDENTS_CSV:-$(dirname "$0")/students.csv}"
@@ -42,22 +43,45 @@ if [[ -z "$BILLING_ACCOUNT_ID" ]]; then
   exit 1
 fi
 
-for i in $(seq -w 1 "$TOTAL_GROUPS"); do
+# Cria (se preciso) o projeto, vincula o billing e ativa Compute + IAP.
+# Espera a Compute API propagar: logo após o `services enable`, comandos
+# `gcloud compute` ainda falham por alguns segundos/minutos.
+prepare_project() {
+  local project_id="$1" display_name="$2"
+
+  if ! gcloud projects describe "$project_id" >/dev/null 2>&1; then
+    gcloud projects create "$project_id" --name="$display_name"
+  fi
+
+  gcloud billing projects link "$project_id" --billing-account="$BILLING_ACCOUNT_ID" >/dev/null
+  gcloud services enable compute.googleapis.com iap.googleapis.com --project="$project_id"
+
+  echo " -> Aguardando a Compute Engine API ficar disponível em ${project_id}..."
+  for _ in $(seq 1 30); do
+    gcloud compute project-info describe --project="$project_id" --format="value(name)" >/dev/null 2>&1 && return 0
+    sleep 10
+  done
+  echo "[ERRO] Compute Engine API não ficou disponível em ${project_id} após 5 minutos."
+  exit 1
+}
+
+# ------------------------------------------------------------------------------
+# 0. Projeto Central (Hub): o Terraform de hub-facilitador/ é aplicado nele
+# ------------------------------------------------------------------------------
+echo "=================================================================="
+echo " Preparando Projeto Central (Hub): ${HUB_PROJECT_ID}"
+echo "=================================================================="
+prepare_project "$HUB_PROJECT_ID" "e-info Redes Hub Central"
+
+for n in $(seq 1 "$TOTAL_GROUPS"); do
+  i="$(printf %02d "$n")"
   PROJECT_ID="${PROJECT_PREFIX}-${i}"
   echo "=================================================================="
   echo " Preparando Projeto do Grupo ${i}: ${PROJECT_ID}"
   echo "=================================================================="
 
-  # 1. Cria o projeto caso ainda não exista
-  if ! gcloud projects describe "$PROJECT_ID" >/dev/null 2>&1; then
-    gcloud projects create "$PROJECT_ID" --name="e-info Redes Grupo ${i}"
-  fi
-
-  # 2. Vincula a conta de faturamento (Billing Account)
-  gcloud billing projects link "$PROJECT_ID" --billing-account="$BILLING_ACCOUNT_ID"
-
-  # 3. Habilita as APIs essenciais para os laboratórios (Compute Engine + Cloud IAP)
-  gcloud services enable compute.googleapis.com iap.googleapis.com --project="$PROJECT_ID"
+  # 1–3. Cria o projeto, vincula o Billing e ativa Compute Engine + Cloud IAP
+  prepare_project "$PROJECT_ID" "e-info Redes Grupo ${i}"
 
   # 4. Remove as regras de firewall padrão e a VPC `default` para liberar os 5 slots de VPC
   if gcloud compute networks describe default --project="$PROJECT_ID" >/dev/null 2>&1; then

@@ -7,7 +7,7 @@ Este diretório contém toda a **Infraestrutura como Código (Terraform)** e os 
 ## 1. Arquitetura (Suporte para até 40 Alunos)
 
 1. **Agrupamento de Alunos em Projetos de Bancada (`scripts/setup-projetos-grupos.sh`):**
-   - O script cria até **10 projetos** (`einfo-redes-grupo-01` a `10`), vincula o Billing, ativa as APIs (`compute.googleapis.com` e `iap.googleapis.com`), **remove a VPC `default`** (e suas regras permissivas) e ativa o **OS Login**.
+   - O script cria o **projeto do Hub** (`einfo-redes-hub-central`, onde o Terraform deste diretório é aplicado) e até **10 projetos** de grupo (`einfo-redes-grupo-01` a `10`), vincula o Billing, ativa as APIs (`compute.googleapis.com` e `iap.googleapis.com`), **remove a VPC `default`** (e suas regras permissivas) e ativa o **OS Login**.
    - Cada projeto recebe **até 4 alunos** (grupo = `ceil(student_id / 4)`), isolados pelo sufixo `aluno-XX` em todos os recursos. Isso reduz o número de projetos/billing a gerenciar e mantém folga nas cotas por projeto (redes, IPs externos do NAT, CPUs). Confira a cota **"Networks"** em *IAM & Admin > Quotas* antes do evento (padrão atual: 15 por projeto).
    - Se `scripts/students.csv` existir (copie de [`students.csv.example`](./scripts/students.csv.example)), o script também concede a cada aluno, **no projeto do seu grupo**, os papéis mínimos dos labs: `compute.networkAdmin`, `compute.securityAdmin`, `compute.instanceAdmin.v1`, `compute.osAdminLogin`, `iap.tunnelResourceAccessor` e `serviceusage.serviceUsageConsumer`.
    - > ⚠️ O IAM do GCP não isola alunos **dentro** do mesmo projeto: o isolamento entre os 4 colegas é por convenção de nomes (`aluno-XX`). Oriente a turma a só operar nos próprios recursos.
@@ -22,7 +22,7 @@ Este diretório contém toda a **Infraestrutura como Código (Terraform)** e os 
 
 ## 2. Passo a Passo para o Facilitador (Véspera do Curso)
 
-### Passo 1: Preparar os 10 Projetos dos Grupos
+### Passo 1: Preparar o Projeto do Hub e os 10 Projetos dos Grupos
 ```bash
 cd terraform/hub-facilitador
 chmod +x scripts/*.sh
@@ -32,6 +32,8 @@ cp scripts/students.csv.example scripts/students.csv
 # edite scripts/students.csv: student_id,email,nome
 
 BILLING_ACCOUNT_ID="SEU_BILLING_ACCOUNT_ID" ./scripts/setup-projetos-grupos.sh
+# Para um ensaio com menos projetos (ex: conta free trial, que limita projetos com billing):
+# TOTAL_GROUPS=1 BILLING_ACCOUNT_ID=... ./scripts/setup-projetos-grupos.sh
 ```
 
 ### Passo 2: Subir o Hub Central (VPCs, VMs Coletoras e Mural) — um único `terraform apply`

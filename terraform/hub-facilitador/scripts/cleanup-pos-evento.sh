@@ -37,7 +37,8 @@ if [[ "$DELETE_PROJECTS" == "true" ]]; then
     echo "Cancelado."
     exit 1
   fi
-  for i in $(seq -w 1 "$TOTAL_GROUPS"); do
+  for n in $(seq 1 "$TOTAL_GROUPS"); do
+    i="$(printf %02d "$n")"
     project="${PROJECT_PREFIX}-${i}"
     if gcloud projects describe "$project" >/dev/null 2>&1; then
       echo " -> Apagando projeto ${project}..."

@@ -64,8 +64,17 @@ resource "terraform_data" "mural_image" {
 
   triggers_replace = [local.mural_image]
 
+  # Retry: logo após ativar a Cloud Build API num projeto novo, o primeiro
+  # `builds submit` costuma falhar com PERMISSION_DENIED até o IAM propagar (~1–2 min).
   provisioner "local-exec" {
-    command = "gcloud builds submit '${local.mural_source_dir}' --tag='${local.mural_image}' --project='${var.hub_project_id}' --quiet"
+    command = <<-EOT
+      for attempt in 1 2 3 4 5 6; do
+        gcloud builds submit '${local.mural_source_dir}' --tag='${local.mural_image}' --project='${var.hub_project_id}' --quiet && exit 0
+        echo "[mural] build falhou (tentativa $attempt/6); aguardando 30s para o IAM/API propagar..."
+        sleep 30
+      done
+      exit 1
+    EOT
   }
 
   depends_on = [google_artifact_registry_repository.mural]
