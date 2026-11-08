@@ -20,10 +20,14 @@
         <div class="grid-2" style="align-items: center;">
           <div class="flex-col" style="gap: 20px;">
             <div style="display: flex; align-items: center; gap: 16px;">
-              <img src="../assets/logo-facape.svg" alt="Logo FACAPE" style="width: 64px; height: 64px;" />
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <img src="../assets/logo-facape.svg" alt="Logo FACAPE" style="width: 60px; height: 60px; object-fit: contain;" />
+                <div style="width: 1px; height: 38px; background: var(--border-subtle);"></div>
+                <img src="../assets/logo-einfo.png" alt="Logo e-info 2026" style="height: 46px; width: auto; object-fit: contain;" />
+              </div>
               <div>
                 <div class="slide-eyebrow" style="margin-bottom: 4px;">
-                  <span class="pill">e-info • FACAPE</span>
+                  <span class="pill">e-info 2026 • FACAPE</span>
                   <span class="pill pill-tf">Turno da Manhã • 08h00–12h00</span>
                 </div>
                 <div style="font-size: 13.5px; color: var(--text-muted); font-family: var(--font-mono);">
@@ -44,12 +48,15 @@
               </p>
             </div>
 
-            <div class="card card-elevated" style="padding: 16px 20px; max-width: 620px;">
-              <div style="display: flex; align-items: center; justify-content: space-between; gap: 14px;">
-                <div>
-                  <div style="font-size: 11.5px; font-family: var(--font-mono); color: var(--gcp-cyan); text-transform: uppercase;">Facilitador</div>
-                  <div style="font-size: 19px; font-weight: 700; color: var(--text-primary); margin-top: 2px;">Luan Sousa</div>
-                  <div style="font-size: 13.5px; color: var(--text-secondary);">Cloud Engineer @ SantoDigital • Google Cloud Digital Leader • CC FACAPE</div>
+            <div class="card card-elevated" style="padding: 16px 20px; max-width: 640px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                  <img src="../assets/foto-perfil.jpeg" alt="Luan Sousa" class="facilitator-photo-sm" />
+                  <div>
+                    <div style="font-size: 11.5px; font-family: var(--font-mono); color: var(--gcp-cyan); text-transform: uppercase;">Facilitador</div>
+                    <div style="font-size: 19px; font-weight: 700; color: var(--text-primary); margin-top: 2px;">Luan Sousa</div>
+                    <div style="font-size: 13.5px; color: var(--text-secondary);">Cloud Engineer @ SantoDigital • Google Cloud Digital Leader • CC FACAPE</div>
+                  </div>
                 </div>
                 <span class="icon-badge tf" style="width: 44px; height: 44px; font-size: 16px;">.tf</span>
               </div>
@@ -117,17 +124,28 @@
             <div class="slide-eyebrow"><span class="pill">Boas-vindas</span> Abertura e Metodologia</div>
             <h2 class="slide-title">Quem vai guiar essa jornada e como vamos trabalhar</h2>
           </div>
-          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+          <div class="header-brand"><img src="../assets/logo-einfo.png" alt="e-info 2026" class="logo-einfo" /><span class="brand-divider"></span><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
         </div>
 
         <div class="grid-2">
           <div class="card card-elevated" style="justify-content: space-between;">
-            <div class="flex-col">
-              <div class="card-title"><span class="icon-badge">LS</span> Luan Sousa</div>
-              <p><strong>Cloud Engineer na SantoDigital</strong> (Parceira Premier Google Cloud), atuando no desenho, implantação e sustentação de arquiteturas em nuvem.</p>
-              <ul class="feature-list" style="margin-top: 4px;">
+            <div class="flex-col" style="gap: 16px;">
+              <div style="display: flex; align-items: center; gap: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border-subtle);">
+                <img src="../assets/foto-perfil.jpeg" alt="Luan Sousa" class="facilitator-photo-lg" />
+                <div>
+                  <div style="font-size: 11.5px; font-family: var(--font-mono); color: var(--gcp-cyan); text-transform: uppercase; letter-spacing: 0.06em;">Facilitador do Minicurso</div>
+                  <div style="font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--text-primary); margin-top: 2px;">Luan Sousa</div>
+                  <div style="font-size: 14.5px; color: #93C5FD; font-weight: 600; margin-top: 2px;">Cloud Engineer @ SantoDigital (Parceira Google Cloud)</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
+                    <span style="font-family: var(--font-mono); font-size: 11px; padding: 3px 9px; border-radius: 999px; background: rgba(59, 130, 246, 0.16); border: 1px solid rgba(59, 130, 246, 0.35); color: #93C5FD;">Google Cloud Digital Leader</span>
+                    <span style="font-family: var(--font-mono); font-size: 11px; padding: 3px 9px; border-radius: 999px; background: rgba(139, 92, 246, 0.18); border: 1px solid rgba(139, 92, 246, 0.4); color: #C4B5FD;">Ciência da Computação • FACAPE</span>
+                  </div>
+                </div>
+              </div>
+              <p>Atua no <strong>desenho, implantação e sustentação de arquiteturas em nuvem</strong> no Google Cloud Platform.</p>
+              <ul class="feature-list" style="margin-top: 2px;">
                 <li><strong>Visão 360°:</strong> Experiência prática passando por projetos de <strong>Fullstack, DevOps, Infraestrutura e SecOps</strong>.</li>
-                <li><strong>Certificação:</strong> Google Cloud Digital Leader.</li>
+                <li><strong>Foco em IaC:</strong> Automação de redes, segurança e ambientes reprodutíveis com Terraform.</li>
                 <li><strong>Da Casa:</strong> Bacharelando em <strong>Ciência da Computação pela FACAPE</strong>.</li>
               </ul>
             </div>
@@ -164,7 +182,7 @@
             <div class="slide-eyebrow"><span class="pill">Cronograma 8h</span> Visão Geral do Dia</div>
             <h2 class="slide-title">Nossa Trilha de Construção: Manhã vs. Tarde</h2>
           </div>
-          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+          <div class="header-brand"><img src="../assets/logo-einfo.png" alt="e-info 2026" class="logo-einfo" /><span class="brand-divider"></span><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
         </div>
 
         <div class="grid-2">
@@ -225,7 +243,7 @@
             <div class="slide-eyebrow"><span class="pill pill-live">Alinhamento Inicial</span> Seu Passaporte de Rede</div>
             <h2 class="slide-title">Check-in do Ambiente: Seu <code class="inline-code">student_id</code> e <code class="inline-code">project_id</code></h2>
           </div>
-          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+          <div class="header-brand"><img src="../assets/logo-einfo.png" alt="e-info 2026" class="logo-einfo" /><span class="brand-divider"></span><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
         </div>
 
         <div class="grid-2-wide-left">
@@ -302,7 +320,7 @@
             <div class="slide-eyebrow"><span class="pill">Módulo 01 • Teoria Aplicada</span> Redes Físicas vs. Nuvem</div>
             <h2 class="slide-title">Onde foram parar os cabos, switches e roteadores na Nuvem?</h2>
           </div>
-          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+          <div class="header-brand"><img src="../assets/logo-einfo.png" alt="e-info 2026" class="logo-einfo" /><span class="brand-divider"></span><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
         </div>
 
         <div class="grid-2">
@@ -337,7 +355,7 @@
             <div class="slide-eyebrow"><span class="pill">Módulo 01 • Fundamentos IPv4</span> Desmistificando o CIDR</div>
             <h2 class="slide-title">Entendendo o Bloco <code class="inline-code">10.&lt;student_id&gt;.0.0/24</code> na Prática</h2>
           </div>
-          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+          <div class="header-brand"><img src="../assets/logo-einfo.png" alt="e-info 2026" class="logo-einfo" /><span class="brand-divider"></span><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
         </div>
 
         <div class="flex-col" style="flex: 1; justify-content: flex-start; gap: 16px;">
@@ -392,7 +410,7 @@
             <div class="slide-eyebrow"><span class="pill">Módulo 01 • Pegadinha Clássica de Cloud</span> 256 − 4 = 252 Hosts</div>
             <h2 class="slide-title">Por que nossa primeira VM no GCP recebe o IP <code class="inline-code">.2</code> e não o <code class="inline-code">.1</code>?</h2>
           </div>
-          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+          <div class="header-brand"><img src="../assets/logo-einfo.png" alt="e-info 2026" class="logo-einfo" /><span class="brand-divider"></span><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
         </div>
 
         <div class="grid-2-wide-left" style="align-items: stretch;">
@@ -458,7 +476,7 @@
             <div class="slide-eyebrow"><span class="pill">Módulo 01 • Arquitetura GCP</span> O Grande Diferencial do Google Cloud</div>
             <h2 class="slide-title">Escopo de Recursos: VPC é Global, Sub-rede é Regional, VM é Zonal</h2>
           </div>
-          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+          <div class="header-brand"><img src="../assets/logo-einfo.png" alt="e-info 2026" class="logo-einfo" /><span class="brand-divider"></span><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
         </div>
 
         <div class="grid-2" style="align-items: stretch;">
@@ -525,7 +543,7 @@
             <div class="slide-eyebrow"><span class="pill pill-tf">Módulo 02 • Infraestrutura como Código</span> O Fim do ClickOps</div>
             <h2 class="slide-title">Por que gerenciar Redes com Terraform em vez do Console Web?</h2>
           </div>
-          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+          <div class="header-brand"><img src="../assets/logo-einfo.png" alt="e-info 2026" class="logo-einfo" /><span class="brand-divider"></span><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
         </div>
 
         <div class="grid-3">
@@ -565,7 +583,7 @@
             <div class="slide-eyebrow"><span class="pill pill-tf">Módulo 02 • Sintaxe HCL</span> Os 5 Blocos e os 5 Comandos</div>
             <h2 class="slide-title">Anatomia do Terraform que vamos codar hoje</h2>
           </div>
-          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+          <div class="header-brand"><img src="../assets/logo-einfo.png" alt="e-info 2026" class="logo-einfo" /><span class="brand-divider"></span><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
         </div>
 
         <div class="grid-2">
@@ -623,7 +641,7 @@
             <div class="slide-eyebrow"><span class="pill pill-live">Mão na Massa • Live Coding 00</span> 09h20 – 09h50</div>
             <h2 class="slide-title">Preparando nossa Fundação em <code class="inline-code">terraform/live-coding/</code></h2>
           </div>
-          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+          <div class="header-brand"><img src="../assets/logo-einfo.png" alt="e-info 2026" class="logo-einfo" /><span class="brand-divider"></span><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
         </div>
 
         <div class="grid-2-wide-right">
@@ -679,7 +697,7 @@
             <div class="slide-eyebrow"><span class="pill">Módulo 03 • Etapa 01</span> Decisão de Arquitetura</div>
             <h2 class="slide-title">Modo Auto vs. Modo Custom: Por que <code class="inline-code">auto_create_subnetworks = false</code>?</h2>
           </div>
-          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+          <div class="header-brand"><img src="../assets/logo-einfo.png" alt="e-info 2026" class="logo-einfo" /><span class="brand-divider"></span><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
         </div>
 
         <div class="grid-2">
@@ -713,7 +731,7 @@
             <div class="slide-eyebrow"><span class="pill pill-live">Mão na Massa • Etapa 01</span> 10h20 – 11h00 • Checkpoint: <code class="inline-code">labs/01-vpc-subnets/</code></div>
             <h2 class="slide-title">Construindo nossa VPC Customizada e Sub-rede Regional</h2>
           </div>
-          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+          <div class="header-brand"><img src="../assets/logo-einfo.png" alt="e-info 2026" class="logo-einfo" /><span class="brand-divider"></span><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
         </div>
 
         <div class="grid-2-wide-right">
@@ -762,7 +780,7 @@
             <div class="slide-eyebrow"><span class="pill">Módulo 04 • Etapa 02</span> Segurança de Rede na Nuvem</div>
             <h2 class="slide-title">Como funciona o Firewall Stateful e as Network Tags no GCP</h2>
           </div>
-          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+          <div class="header-brand"><img src="../assets/logo-einfo.png" alt="e-info 2026" class="logo-einfo" /><span class="brand-divider"></span><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
         </div>
 
         <div class="grid-3">
@@ -798,7 +816,7 @@
             <div class="slide-eyebrow"><span class="pill">Módulo 04 • Arquitetura Zero-Trust</span> Sem IP Público, Sem Porta Exposta</div>
             <h2 class="slide-title">Como fazer SSH em uma VM Privada usando Cloud IAP?</h2>
           </div>
-          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+          <div class="header-brand"><img src="../assets/logo-einfo.png" alt="e-info 2026" class="logo-einfo" /><span class="brand-divider"></span><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
         </div>
 
         <div class="grid-2" style="align-items: stretch;">
@@ -863,7 +881,7 @@
             <div class="slide-eyebrow"><span class="pill pill-live">Mão na Massa • Etapa 02</span> 11h20 – 12h00 • Checkpoint: <code class="inline-code">labs/02-firewall-vms/</code></div>
             <h2 class="slide-title">Subindo Firewall + VM Privada e o Mistério antes do Almoço!</h2>
           </div>
-          <div class="header-brand"><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
+          <div class="header-brand"><img src="../assets/logo-einfo.png" alt="e-info 2026" class="logo-einfo" /><span class="brand-divider"></span><img src="../assets/logo-facape.svg" alt="FACAPE" /></div>
         </div>
 
         <div class="grid-2-wide-right">

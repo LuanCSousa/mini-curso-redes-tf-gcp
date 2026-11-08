@@ -1,9 +1,11 @@
 <div align="center">
-  <img src="docs/logo-facape.svg" alt="Logo FACAPE" width="220" />
+  <img src="docs/logo-facape.svg" alt="Logo FACAPE" height="110" />
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="slides/assets/logo-einfo.png" alt="Logo e-info 2026" height="90" />
 
   # Redes.tf: da Teoria à Prática com Terraform e GCP
 
-  **Minicurso Oficial — e-info | FACAPE**
+  **Minicurso Oficial — e-info 2026 | FACAPE**
 
   ![Carga Horária](https://img.shields.io/badge/Carga_Hor%C3%A1ria-8_Horas-0A66C2?style=for-the-badge)
   ![Terraform](https://img.shields.io/badge/Terraform-%3E%3D_1.5-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)
@@ -23,10 +25,18 @@ Durante o curso, **construiremos toda a infraestrutura do zero ao fim (*Live Cod
 
 ## Facilitador
 
-**Luan Sousa**  
-*Cloud Engineer na **SantoDigital** (Parceira Google Cloud)*
-
-Atua no desenho, na implantação e na sustentação de infraestrutura em nuvem. Sua trajetória inclui projetos de Fullstack, DevOps, Infraestrutura e SecOps, trazendo ao curso uma visão completa de como redes são projetadas, automatizadas e protegidas em ambientes reais. É certificado **Google Cloud Digital Leader** e bacharelando em **Ciência da Computação pela FACAPE**.
+<table>
+  <tr>
+    <td width="160" align="center">
+      <img src="docs/Foto%20Perfil.jpeg" alt="Luan Sousa" width="140" style="border-radius: 50%;" />
+    </td>
+    <td>
+      <strong>Luan Sousa</strong><br/>
+      <em>Cloud Engineer na <strong>SantoDigital</strong> (Parceira Google Cloud)</em><br/><br/>
+      Atua no desenho, na implantação e na sustentação de infraestrutura em nuvem. Sua trajetória inclui projetos de Fullstack, DevOps, Infraestrutura e SecOps, trazendo ao curso uma visão completa de como redes são projetadas, automatizadas e protegidas em ambientes reais. É certificado <strong>Google Cloud Digital Leader</strong> e bacharelando em <strong>Ciência da Computação pela FACAPE</strong>.
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -83,8 +93,10 @@ O repositório está organizado em pastas de contexto para facilitar tanto o aco
 
 ```text
 mini-curso-redes-tf-gcp/
-├── docs/                            # Ficha executiva do minicurso, logo da FACAPE e ementa detalhada
+├── docs/                            # Ficha executiva do minicurso, logos, foto do facilitador e ementa
 │   ├── Ficha do Mini Curso.md       # Ficha oficial do curso no evento e-info
+│   ├── Foto Perfil.jpeg             # Foto oficial do facilitador (Luan Sousa)
+│   ├── LOGO E-INFO.png              # Logo oficial do evento e-info 2026
 │   ├── logo-facape.svg              # Identidade visual da FACAPE
 │   └── ementa/                      # Cronograma detalhado das 8h (Manhã e Tarde) e roteiro
 ├── pre-material/                    # OBRIGATÓRIO ANTES DO CURSO: Setup de ferramentas e foundation GCP

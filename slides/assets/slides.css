@@ -187,7 +187,7 @@ html, body {
 .header-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   flex-shrink: 0;
 }
 
@@ -195,6 +195,49 @@ html, body {
   width: 44px;
   height: 44px;
   object-fit: contain;
+}
+
+.header-brand img.logo-einfo {
+  width: auto;
+  height: 36px;
+  object-fit: contain;
+}
+
+.header-brand .brand-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--border-subtle);
+}
+
+/* Avatares e Foto do Facilitador */
+.facilitator-photo-lg {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2.5px solid var(--gcp-blue);
+  box-shadow: 0 0 22px rgba(59, 130, 246, 0.35);
+  flex-shrink: 0;
+}
+
+.facilitator-photo-md {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--tf-purple);
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.35);
+  flex-shrink: 0;
+}
+
+.facilitator-photo-sm {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--gcp-blue);
+  box-shadow: 0 0 14px rgba(59, 130, 246, 0.3);
+  flex-shrink: 0;
 }
 
 /* Layouts de Grid com altura contida */

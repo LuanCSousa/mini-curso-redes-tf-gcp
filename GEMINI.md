@@ -84,6 +84,8 @@ mini-curso-redes-tf-gcp/
 ├── README.md                        # Apresentação principal do repositório
 ├── docs/                            # Documentação executiva e pedagógica
 │   ├── Ficha do Mini Curso.md       # Ficha oficial submetida ao e-info (FACAPE)
+│   ├── Foto Perfil.jpeg             # Foto oficial do facilitador (Luan Sousa)
+│   ├── LOGO E-INFO.png              # Logo oficial do evento e-info 2026
 │   ├── logo-facape.svg              # Logo oficial da FACAPE (usar nos slides e docs)
 │   └── ementa/                      # Cronograma detalhado das 8h (Manhã/Tarde) e roteiro de aula
 ├── pre-material/                    # Guia e código de preparação prévia (Foundation)
@@ -107,5 +109,5 @@ mini-curso-redes-tf-gcp/
 - **Formato Principal:** **Apresentação Web Visual Interativa (16:9)** que roda diretamente no navegador em tela cheia (`F11`), com animações didáticas de fluxo de pacotes/redes, *syntax highlighting* para código Terraform/CLI, notas do apresentador e navegação fluida por teclado.
 - **Exportação Garantida:** Sempre manter compatibilidade ou gerar os equivalentes em **PDF e PowerPoint (`.pptx`)** dentro de `slides/exportados/`.
 - **Identidade Visual:**
-  - Utilizar a logo da FACAPE (`docs/logo-facape.svg`), cores institucionais combinadas com a paleta moderna de **Google Cloud** (azul/verde/amarelo/vermelho) e **HashiCorp Terraform** (roxo `#7B42BC` / dark mode técnico para blocos de código).
+  - Utilizar a logo da FACAPE (`docs/logo-facape.svg`), a logo do evento e-info (`docs/LOGO E-INFO.png` / `slides/assets/logo-einfo.png`) e a foto do facilitador (`docs/Foto Perfil.jpeg` / `slides/assets/foto-perfil.jpeg`), combinadas com a paleta moderna de **Google Cloud** (azul/verde/amarelo/vermelho) e **HashiCorp Terraform** (roxo `#7B42BC` / dark mode técnico para blocos de código).
   - Intercalar slides conceituais visuais (diagramas de sub-rede, firewall, NAT, Peering) com slides de chamada para **"Mão na Massa / Live Coding"**.

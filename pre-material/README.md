@@ -1,10 +1,12 @@
 # Pré-material Obrigatório (Foundation) — Redes.tf
 
 <div align="center">
-  <img src="../docs/logo-facape.svg" alt="Logo FACAPE" width="180" />
+  <img src="../docs/logo-facape.svg" alt="Logo FACAPE" height="95" />
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="../slides/assets/logo-einfo.png" alt="Logo e-info 2026" height="78" />
 
   ### Preparação de Ambiente e Foundation no Google Cloud Platform
-  **Minicurso: Redes.tf — da Teoria à Prática com Terraform e GCP (e-info / FACAPE)**  
+  **Minicurso: Redes.tf — da Teoria à Prática com Terraform e GCP (e-info 2026 / FACAPE)**  
   **Facilitador:** Luan Sousa
 </div>
 

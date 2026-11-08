@@ -8,6 +8,9 @@ if (!fs.existsSync(OUT_DIR)) {
   fs.mkdirSync(OUT_DIR, { recursive: true });
 }
 
+const LOGO_EINFO_PATH = path.join(__dirname, 'assets', 'logo-einfo.png');
+const FOTO_PERFIL_PATH = path.join(__dirname, 'assets', 'foto-perfil.jpeg');
+
 const C = {
   BG_DARK: '0B1120',
   BG_CARD: '131C31',
@@ -41,6 +44,7 @@ const MORNING_SLIDES = [
     left: {
       title: 'Facilitador: Luan Sousa',
       accent: C.BLUE,
+      hasFacilitatorPhoto: true,
       bullets: [
         'Cloud Engineer na SantoDigital (Parceira Premier Google Cloud).',
         'Atuação prática em Fullstack, DevOps, Infraestrutura e SecOps.',
@@ -788,6 +792,7 @@ terraform destroy
     right: {
       title: 'Obrigado, turma do e-info / FACAPE!',
       accent: C.PURPLE,
+      hasFacilitatorPhoto: true,
       bullets: [
         'Todo o código, os gabaritos das 5 etapas e os módulos ficam disponíveis no repositório para seus estudos e portfólio.',
         'Facilitador: Luan Sousa — Cloud Engineer @ SantoDigital | Ciência da Computação FACAPE.'
@@ -814,8 +819,11 @@ async function generatePptx(slidesData, outFile, deckTitle) {
         x: 0.55, y: 0.55, w: 8.9, h: 4.5, rectRadius: 0.12,
         fill: { color: C.BG_CARD }, line: { color: s.accent, width: 1.5 }
       });
+      if (fs.existsSync(LOGO_EINFO_PATH)) {
+        slide.addImage({ path: LOGO_EINFO_PATH, x: 7.75, y: 0.78, w: 1.4, h: 0.66 });
+      }
       slide.addText(s.eyebrow, {
-        x: 0.95, y: 0.95, w: 8.1, h: 0.3,
+        x: 0.95, y: 0.95, w: 6.6, h: 0.3,
         fontFace: 'Courier New', fontSize: 10.5, bold: true, color: C.CYAN, margin: 0
       });
       slide.addText(s.title, {
@@ -826,22 +834,33 @@ async function generatePptx(slidesData, outFile, deckTitle) {
         x: 0.95, y: 2.65, w: 8.1, h: 0.9,
         fontFace: 'Calibri', fontSize: 13.5, color: C.TEXT_SUB, margin: 0
       });
-      slide.addText(s.footerHighlight, {
-        x: 0.95, y: 3.95, w: 8.1, h: 0.45,
-        fontFace: 'Arial', fontSize: 12.5, bold: true, color: C.GREEN, margin: 0
-      });
+      if (fs.existsSync(FOTO_PERFIL_PATH)) {
+        slide.addImage({ path: FOTO_PERFIL_PATH, x: 0.95, y: 3.78, w: 0.72, h: 0.72, rounding: true });
+        slide.addText(s.footerHighlight, {
+          x: 1.82, y: 3.92, w: 7.2, h: 0.45,
+          fontFace: 'Arial', fontSize: 12.5, bold: true, color: C.GREEN, margin: 0
+        });
+      } else {
+        slide.addText(s.footerHighlight, {
+          x: 0.95, y: 3.95, w: 8.1, h: 0.45,
+          fontFace: 'Arial', fontSize: 12.5, bold: true, color: C.GREEN, margin: 0
+        });
+      }
       continue;
     }
 
     // Header
     slide.addText(s.eyebrow.toUpperCase(), {
-      x: 0.55, y: 0.32, w: 8.9, h: 0.24,
+      x: 0.55, y: 0.32, w: 7.5, h: 0.24,
       fontFace: 'Courier New', fontSize: 9.5, bold: true, color: C.CYAN, margin: 0
     });
     slide.addText(s.title, {
-      x: 0.55, y: 0.58, w: 8.9, h: 0.52,
+      x: 0.55, y: 0.58, w: 7.5, h: 0.52,
       fontFace: 'Arial', fontSize: 19.5, bold: true, color: C.TEXT_MAIN, margin: 0
     });
+    if (fs.existsSync(LOGO_EINFO_PATH)) {
+      slide.addImage({ path: LOGO_EINFO_PATH, x: 8.25, y: 0.36, w: 1.18, h: 0.56 });
+    }
 
     // Coluna Esquerda
     if (s.left) {
@@ -849,10 +868,22 @@ async function generatePptx(slidesData, outFile, deckTitle) {
         x: 0.55, y: 1.25, w: 4.3, h: 3.8, rectRadius: 0.08,
         fill: { color: C.BG_CARD }, line: { color: s.left.accent || C.BORDER, width: 1.2 }
       });
-      slide.addText(s.left.title, {
-        x: 0.75, y: 1.42, w: 3.9, h: 0.36,
-        fontFace: 'Arial', fontSize: 13, bold: true, color: C.TEXT_MAIN, margin: 0
-      });
+      if (s.left.hasFacilitatorPhoto && fs.existsSync(FOTO_PERFIL_PATH)) {
+        slide.addImage({ path: FOTO_PERFIL_PATH, x: 0.75, y: 1.42, w: 0.82, h: 0.82, rounding: true });
+        slide.addText(s.left.title, {
+          x: 1.7, y: 1.52, w: 2.95, h: 0.36,
+          fontFace: 'Arial', fontSize: 14, bold: true, color: C.TEXT_MAIN, margin: 0
+        });
+        slide.addText('Cloud Engineer @ SantoDigital • CC FACAPE', {
+          x: 1.7, y: 1.86, w: 2.95, h: 0.28,
+          fontFace: 'Calibri', fontSize: 10.5, bold: true, color: C.CYAN, margin: 0
+        });
+      } else {
+        slide.addText(s.left.title, {
+          x: 0.75, y: 1.42, w: 3.9, h: 0.36,
+          fontFace: 'Arial', fontSize: 13, bold: true, color: C.TEXT_MAIN, margin: 0
+        });
+      }
       const runs = s.left.bullets.map((b, i) => ({
         text: b,
         options: {
@@ -864,8 +895,10 @@ async function generatePptx(slidesData, outFile, deckTitle) {
           fontSize: 11.5
         }
       }));
+      const textY = s.left.hasFacilitatorPhoto ? 2.38 : 1.85;
+      const textH = s.left.hasFacilitatorPhoto ? 2.52 : 3.05;
       slide.addText(runs, {
-        x: 0.75, y: 1.85, w: 3.9, h: 3.05, valign: 'top', margin: 0
+        x: 0.75, y: textY, w: 3.9, h: textH, valign: 'top', margin: 0
       });
     } else if (s.leftCode) {
       slide.addShape('roundRect', {
@@ -888,10 +921,22 @@ async function generatePptx(slidesData, outFile, deckTitle) {
         x: 5.15, y: 1.25, w: 4.3, h: 3.8, rectRadius: 0.08,
         fill: { color: C.BG_CARD }, line: { color: s.right.accent || C.BORDER, width: 1.2 }
       });
-      slide.addText(s.right.title, {
-        x: 5.35, y: 1.42, w: 3.9, h: 0.36,
-        fontFace: 'Arial', fontSize: 13, bold: true, color: C.TEXT_MAIN, margin: 0
-      });
+      if (s.right.hasFacilitatorPhoto && fs.existsSync(FOTO_PERFIL_PATH)) {
+        slide.addImage({ path: FOTO_PERFIL_PATH, x: 5.35, y: 1.42, w: 0.82, h: 0.82, rounding: true });
+        slide.addText(s.right.title, {
+          x: 6.3, y: 1.52, w: 2.95, h: 0.36,
+          fontFace: 'Arial', fontSize: 13.5, bold: true, color: C.TEXT_MAIN, margin: 0
+        });
+        slide.addText('Luan Sousa • Facilitador', {
+          x: 6.3, y: 1.86, w: 2.95, h: 0.28,
+          fontFace: 'Calibri', fontSize: 10.5, bold: true, color: C.CYAN, margin: 0
+        });
+      } else {
+        slide.addText(s.right.title, {
+          x: 5.35, y: 1.42, w: 3.9, h: 0.36,
+          fontFace: 'Arial', fontSize: 13, bold: true, color: C.TEXT_MAIN, margin: 0
+        });
+      }
       const runs = s.right.bullets.map((b, i) => ({
         text: b,
         options: {
@@ -903,8 +948,10 @@ async function generatePptx(slidesData, outFile, deckTitle) {
           fontSize: 11.5
         }
       }));
+      const textY = s.right.hasFacilitatorPhoto ? 2.38 : 1.85;
+      const textH = s.right.hasFacilitatorPhoto ? 2.52 : 3.05;
       slide.addText(runs, {
-        x: 5.35, y: 1.85, w: 3.9, h: 3.05, valign: 'top', margin: 0
+        x: 5.35, y: textY, w: 3.9, h: textH, valign: 'top', margin: 0
       });
     } else if (s.rightCode) {
       slide.addShape('roundRect', {
@@ -953,22 +1000,38 @@ function generatePdf(slidesData, outFile, deckTitle) {
 
       if (s.isCover) {
         doc.roundedRect(48, 48, 864, 444, 12).fillAndStroke('#' + C.BG_CARD, '#' + s.accent);
+        if (fs.existsSync(LOGO_EINFO_PATH)) {
+          doc.image(LOGO_EINFO_PATH, 745, 70, { width: 135 });
+        }
         doc.font('Courier-Bold').fontSize(11).fillColor('#' + C.CYAN)
-           .text(s.eyebrow, 84, 88, { width: 792 });
+           .text(s.eyebrow, 84, 88, { width: 640 });
         doc.font('Helvetica-Bold').fontSize(28).fillColor('#' + C.TEXT_MAIN)
            .text(s.title, 84, 130, { width: 792 });
         doc.font('Helvetica').fontSize(14).fillColor('#' + C.TEXT_SUB)
            .text(s.subtitle, 84, 235, { width: 792, lineGap: 4 });
-        doc.font('Helvetica-Bold').fontSize(13).fillColor('#' + C.GREEN)
-           .text(s.footerHighlight, 84, 395, { width: 792 });
+        if (fs.existsSync(FOTO_PERFIL_PATH)) {
+          doc.save();
+          doc.circle(114, 408, 30).clip();
+          doc.image(FOTO_PERFIL_PATH, 84, 378, { width: 60, height: 60 });
+          doc.restore();
+          doc.circle(114, 408, 30).lineWidth(2).strokeColor('#' + C.BLUE).stroke();
+          doc.font('Helvetica-Bold').fontSize(13).fillColor('#' + C.GREEN)
+             .text(s.footerHighlight, 158, 398, { width: 718 });
+        } else {
+          doc.font('Helvetica-Bold').fontSize(13).fillColor('#' + C.GREEN)
+             .text(s.footerHighlight, 84, 395, { width: 792 });
+        }
         return;
       }
 
       // Header
       doc.font('Courier-Bold').fontSize(10).fillColor('#' + C.CYAN)
-         .text(s.eyebrow.toUpperCase(), 48, 30, { width: 864 });
+         .text(s.eyebrow.toUpperCase(), 48, 30, { width: 740 });
       doc.font('Helvetica-Bold').fontSize(20).fillColor('#' + C.TEXT_MAIN)
-         .text(s.title, 48, 50, { width: 864 });
+         .text(s.title, 48, 50, { width: 740 });
+      if (fs.existsSync(LOGO_EINFO_PATH)) {
+        doc.image(LOGO_EINFO_PATH, 804, 30, { width: 108 });
+      }
 
       // Linha divisória sutil
       doc.moveTo(48, 92).lineTo(912, 92).strokeColor('#' + C.BORDER).lineWidth(1).stroke();
@@ -986,9 +1049,24 @@ function generatePdf(slidesData, outFile, deckTitle) {
           doc.font('Courier').fontSize(9.5).fillColor('#' + C.TEXT_MAIN)
              .text(boxData.code, x + 18, 154, { width: 384, lineGap: 3 });
         } else {
-          doc.font('Helvetica-Bold').fontSize(13.5).fillColor('#' + C.TEXT_MAIN)
-             .text(boxData.title, x + 20, 128, { width: 380 });
           let curY = 166;
+          if (boxData.hasFacilitatorPhoto && fs.existsSync(FOTO_PERFIL_PATH)) {
+            const cx = x + 52;
+            const cy = 158;
+            doc.save();
+            doc.circle(cx, cy, 32).clip();
+            doc.image(FOTO_PERFIL_PATH, cx - 32, cy - 32, { width: 64, height: 64 });
+            doc.restore();
+            doc.circle(cx, cy, 32).lineWidth(2).strokeColor('#' + C.BLUE).stroke();
+            doc.font('Helvetica-Bold').fontSize(14).fillColor('#' + C.TEXT_MAIN)
+               .text(boxData.title, x + 98, 138, { width: 302 });
+            doc.font('Courier-Bold').fontSize(9.5).fillColor('#' + C.CYAN)
+               .text('Cloud Engineer @ SantoDigital • CC FACAPE', x + 98, 160, { width: 302 });
+            curY = 206;
+          } else {
+            doc.font('Helvetica-Bold').fontSize(13.5).fillColor('#' + C.TEXT_MAIN)
+               .text(boxData.title, x + 20, 128, { width: 380 });
+          }
           boxData.bullets.forEach((b) => {
             doc.circle(x + 24, curY + 5, 2.5).fill('#' + C.CYAN);
             doc.font('Helvetica').fontSize(11.5).fillColor('#' + C.TEXT_SUB)

@@ -1,14 +1,25 @@
 # Ementa Completa — Redes.tf: da Teoria à Prática com Terraform e GCP
 
 <div align="center">
-  <img src="../logo-facape.svg" alt="Logo FACAPE" width="180" />
+  <img src="../logo-facape.svg" alt="Logo FACAPE" height="95" />
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="../../slides/assets/logo-einfo.png" alt="Logo e-info 2026" height="78" />
 </div>
 
-- **Evento:** e-info — FACAPE (Faculdade de Ciências Aplicadas e Sociais de Petrolina)
-- **Facilitador:** Luan Sousa (*Cloud Engineer na SantoDigital | Google Cloud Digital Leader | Bacharelando em Ciência da Computação — FACAPE*)
-- **Carga Horária Total:** 8 horas (1 dia intensivo: Manhã `08h00–12h00` | Tarde `14h00–18h00`)
-- **Modalidade:** Presencial, 100% prática (*Live Coding* do zero ao fim no Google Cloud Platform com Terraform)
-- **Público-alvo:** Todos os níveis (estudantes e profissionais de TI)
+<table>
+  <tr>
+    <td width="110" align="center">
+      <img src="../Foto%20Perfil.jpeg" alt="Luan Sousa" width="90" style="border-radius: 50%;" />
+    </td>
+    <td>
+      <strong>Evento:</strong> e-info 2026 — FACAPE (Faculdade de Ciências Aplicadas e Sociais de Petrolina)<br/>
+      <strong>Facilitador:</strong> Luan Sousa (<em>Cloud Engineer na SantoDigital | Google Cloud Digital Leader | Bacharelando em Ciência da Computação — FACAPE</em>)<br/>
+      <strong>Carga Horária Total:</strong> 8 horas (1 dia intensivo: Manhã <code>08h00–12h00</code> | Tarde <code>14h00–18h00</code>)<br/>
+      <strong>Modalidade:</strong> Presencial, 100% prática (<em>Live Coding</em> do zero ao fim no Google Cloud Platform com Terraform)<br/>
+      <strong>Público-alvo:</strong> Todos os níveis (estudantes e profissionais de TI)
+    </td>
+  </tr>
+</table>
 
 ---
 
