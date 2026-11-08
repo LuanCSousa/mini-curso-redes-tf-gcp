@@ -32,9 +32,11 @@ cp scripts/students.csv.example scripts/students.csv
 # edite scripts/students.csv: student_id,email,nome
 
 BILLING_ACCOUNT_ID="SEU_BILLING_ACCOUNT_ID" ./scripts/setup-projetos-grupos.sh
-# Para um ensaio com menos projetos (ex: conta free trial, que limita projetos com billing):
+# Sem students.csv (ex: ensaio numa conta free trial, que limita projetos com billing):
 # TOTAL_GROUPS=1 BILLING_ACCOUNT_ID=... ./scripts/setup-projetos-grupos.sh
 ```
+
+**Quantos projetos de grupo são criados?** Com `scripts/students.csv`, o CSV manda: o script cria `ceil(maior student_id / 4)` projetos (ex: maior id `12` → `grupo-01..03`) e valida os IDs (`1..40`) antes de criar qualquer coisa. `TOTAL_GROUPS` só é necessário sem CSV (padrão `10`); com CSV, ele pode ser maior (projetos de reserva), mas se for menor do que o CSV exige o script aborta antes de começar.
 
 ### Passo 2: Subir o Hub Central (VPCs, VMs Coletoras e Mural) — um único `terraform apply`
 Pré-requisito: `gcloud auth login` e `gcloud auth application-default login` com a conta Owner do projeto do Hub (o build da imagem do Mural roda `gcloud builds submit` na sua máquina).

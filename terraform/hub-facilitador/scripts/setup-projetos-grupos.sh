@@ -14,6 +14,12 @@
 #   1. Ativa o OS Login no projeto (SSH via IAP autenticado pelo IAM);
 #   2. Concede a cada aluno, no projeto do SEU grupo, os papéis mínimos para os labs.
 #
+# QUANTOS PROJETOS DE GRUPO SÃO CRIADOS:
+#   - Com students.csv: ceil(maior student_id / 4) — o CSV é a fonte da verdade
+#     (ex: maior id 12 -> 3 projetos). TOTAL_GROUPS, se informado, precisa cobrir
+#     o CSV; pode ser maior (projetos de reserva), nunca menor.
+#   - Sem students.csv: TOTAL_GROUPS (padrão: 10 = 40 alunos).
+#
 # COMO USAR ANTES DO EVENTO:
 #   chmod +x scripts/setup-projetos-grupos.sh
 #   cp scripts/students.csv.example scripts/students.csv   # e preencha (não versionar!)
@@ -24,7 +30,9 @@ set -euo pipefail
 BILLING_ACCOUNT_ID="${BILLING_ACCOUNT_ID:-}"
 HUB_PROJECT_ID="${HUB_PROJECT_ID:-einfo-redes-hub-central}"
 PROJECT_PREFIX="${PROJECT_PREFIX:-einfo-redes-grupo}"
-TOTAL_GROUPS="${TOTAL_GROUPS:-10}" # 10 projetos x 4 alunos = 40 alunos
+TOTAL_GROUPS="${TOTAL_GROUPS:-}" # vazio = calcula pelo CSV (ou 10 sem CSV)
+STUDENTS_PER_GROUP=4
+MAX_STUDENTS=40 # sub-redes 10.<ID>.0.0/24 e VMs coletoras aceitam IDs 1..40
 STUDENTS_CSV="${STUDENTS_CSV:-$(dirname "$0")/students.csv}"
 
 # Papéis mínimos de cada aluno no projeto do seu grupo:
@@ -41,6 +49,45 @@ if [[ -z "$BILLING_ACCOUNT_ID" ]]; then
   echo "[ERRO] Defina a variável BILLING_ACCOUNT_ID antes de executar:"
   echo "  BILLING_ACCOUNT_ID=\"012345-6789AB-CDEF01\" ./scripts/setup-projetos-grupos.sh"
   exit 1
+fi
+
+# ------------------------------------------------------------------------------
+# Quantidade de projetos de grupo: derivada do students.csv (se existir)
+# ------------------------------------------------------------------------------
+if [[ -n "$TOTAL_GROUPS" && ! "$TOTAL_GROUPS" =~ ^[0-9]+$ ]]; then
+  echo "[ERRO] TOTAL_GROUPS deve ser um número inteiro (recebido: '${TOTAL_GROUPS}')."
+  exit 1
+fi
+
+if [[ -f "$STUDENTS_CSV" ]]; then
+  max_id=0
+  while IFS=, read -r sid _; do
+    sid="$(echo "$sid" | tr -d '[:space:]')"
+    [[ -z "$sid" ]] && continue
+    if [[ ! "$sid" =~ ^[0-9]+$ ]] || (( 10#$sid < 1 || 10#$sid > MAX_STUDENTS )); then
+      echo "[ERRO] student_id inválido em ${STUDENTS_CSV}: '${sid}' (esperado 1..${MAX_STUDENTS})."
+      exit 1
+    fi
+    (( 10#$sid > max_id )) && max_id=$(( 10#$sid ))
+  done < <(tail -n +2 "$STUDENTS_CSV")
+
+  if (( max_id == 0 )); then
+    echo "[ERRO] ${STUDENTS_CSV} não tem nenhum aluno (só o cabeçalho?)."
+    exit 1
+  fi
+
+  required_groups=$(( (max_id + STUDENTS_PER_GROUP - 1) / STUDENTS_PER_GROUP ))
+  if [[ -z "$TOTAL_GROUPS" ]]; then
+    TOTAL_GROUPS="$required_groups"
+    echo "[INFO] Maior student_id no CSV: ${max_id} -> ${TOTAL_GROUPS} projeto(s) de grupo."
+  elif (( 10#$TOTAL_GROUPS < required_groups )); then
+    echo "[ERRO] TOTAL_GROUPS=${TOTAL_GROUPS} não cobre o CSV: o student_id ${max_id} fica no grupo $(printf %02d "$required_groups")."
+    echo "       Use TOTAL_GROUPS>=${required_groups} ou omita TOTAL_GROUPS para calcular automaticamente."
+    exit 1
+  fi
+else
+  TOTAL_GROUPS="${TOTAL_GROUPS:-10}"
+  echo "[INFO] ${STUDENTS_CSV} não encontrado: criando ${TOTAL_GROUPS} projeto(s) de grupo (TOTAL_GROUPS)."
 fi
 
 # Cria (se preciso) o projeto, vincula o billing e ativa Compute + IAP.
